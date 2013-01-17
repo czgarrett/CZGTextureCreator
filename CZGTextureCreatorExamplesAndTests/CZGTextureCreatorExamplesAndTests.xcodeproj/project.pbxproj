@@ -1,0 +1,598 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		83DF785E16A84B5A007F09E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF785D16A84B5A007F09E8 /* QuartzCore.framework */; };
+		83DF786016A84B5A007F09E8 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF785F16A84B5A007F09E8 /* OpenGLES.framework */; };
+		83DF786216A84B5A007F09E8 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786116A84B5A007F09E8 /* OpenAL.framework */; };
+		83DF786416A84B5A007F09E8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786316A84B5A007F09E8 /* AudioToolbox.framework */; };
+		83DF786616A84B5A007F09E8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786516A84B5A007F09E8 /* AVFoundation.framework */; };
+		83DF786816A84B5A007F09E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786716A84B5A007F09E8 /* UIKit.framework */; };
+		83DF786A16A84B5A007F09E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786916A84B5A007F09E8 /* Foundation.framework */; };
+		83DF786C16A84B5A007F09E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786B16A84B5A007F09E8 /* CoreGraphics.framework */; };
+		83DF786E16A84B5A007F09E8 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786D16A84B5A007F09E8 /* GameKit.framework */; };
+		83DF787216A84B5A007F09E8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787116A84B5A007F09E8 /* Default.png */; };
+		83DF787416A84B5A007F09E8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787316A84B5A007F09E8 /* Default@2x.png */; };
+		83DF787616A84B5A007F09E8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787516A84B5A007F09E8 /* Default-568h@2x.png */; };
+		83DF787816A84B5A007F09E8 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787716A84B5A007F09E8 /* Default-Landscape~ipad.png */; };
+		83DF787A16A84B5A007F09E8 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787916A84B5A007F09E8 /* fps_images.png */; };
+		83DF787C16A84B5A007F09E8 /* fps_images-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787B16A84B5A007F09E8 /* fps_images-hd.png */; };
+		83DF787E16A84B5A007F09E8 /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787D16A84B5A007F09E8 /* fps_images-ipadhd.png */; };
+		83DF788016A84B5A007F09E8 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF787F16A84B5A007F09E8 /* Icon-72.png */; };
+		83DF788216A84B5A007F09E8 /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788116A84B5A007F09E8 /* Icon-Small-50.png */; };
+		83DF788416A84B5A007F09E8 /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788316A84B5A007F09E8 /* Icon-Small.png */; };
+		83DF788616A84B5A007F09E8 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788516A84B5A007F09E8 /* Icon-Small@2x.png */; };
+		83DF788816A84B5A007F09E8 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788716A84B5A007F09E8 /* Icon.png */; };
+		83DF788A16A84B5A007F09E8 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788916A84B5A007F09E8 /* Icon@2x.png */; };
+		83DF788D16A84B5A007F09E8 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = 83DF788C16A84B5A007F09E8 /* iTunesArtwork */; };
+		83DF79F816A84B5D007F09E8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF79F716A84B5D007F09E8 /* main.m */; };
+		83DF79FB16A84B5D007F09E8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF79FA16A84B5D007F09E8 /* AppDelegate.m */; };
+		83DF79FE16A84B5D007F09E8 /* HelloWorldLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF79FD16A84B5D007F09E8 /* HelloWorldLayer.m */; };
+		83DF7A0116A84B5D007F09E8 /* IntroLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A0016A84B5D007F09E8 /* IntroLayer.m */; };
+		83DF7A0E16A84CC2007F09E8 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF7A0D16A84CC2007F09E8 /* SenTestingKit.framework */; };
+		83DF7A0F16A84CC2007F09E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786716A84B5A007F09E8 /* UIKit.framework */; };
+		83DF7A1016A84CC2007F09E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786916A84B5A007F09E8 /* Foundation.framework */; };
+		83DF7A1616A84CC2007F09E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83DF7A1416A84CC2007F09E8 /* InfoPlist.strings */; };
+		83DF7A2F16A84DE6007F09E8 /* CZGRectanglePackerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A2E16A84DE6007F09E8 /* CZGRectanglePackerSpec.m */; };
+		83DF7A3516A84F07007F09E8 /* CZGRectanglePacker.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A3416A84F07007F09E8 /* CZGRectanglePacker.m */; };
+		90BECF26630442FAA54C6636 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30FFD1FD1BB6410C8FCC3AB0 /* libPods-Tests.a */; };
+		B88AAE0CE29E419C924ADE90 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A11F5E7D3F46568115591C /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		83DF7A3116A84EB3007F09E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83DF785016A84B5A007F09E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83DF785816A84B5A007F09E8;
+			remoteInfo = CZGTextureCreatorExamplesAndTests;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		30FFD1FD1BB6410C8FCC3AB0 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C88CD5AA4164AE3A0EB9C8F /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		83DF785916A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CZGTextureCreatorExamplesAndTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		83DF785D16A84B5A007F09E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		83DF785F16A84B5A007F09E8 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		83DF786116A84B5A007F09E8 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		83DF786316A84B5A007F09E8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		83DF786516A84B5A007F09E8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		83DF786716A84B5A007F09E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		83DF786916A84B5A007F09E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		83DF786B16A84B5A007F09E8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		83DF786D16A84B5A007F09E8 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		83DF787116A84B5A007F09E8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
+		83DF787316A84B5A007F09E8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resources/Default@2x.png"; sourceTree = "<group>"; };
+		83DF787516A84B5A007F09E8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
+		83DF787716A84B5A007F09E8 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "Resources/Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		83DF787916A84B5A007F09E8 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = Resources/fps_images.png; sourceTree = "<group>"; };
+		83DF787B16A84B5A007F09E8 /* fps_images-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-hd.png"; path = "Resources/fps_images-hd.png"; sourceTree = "<group>"; };
+		83DF787D16A84B5A007F09E8 /* fps_images-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-ipadhd.png"; path = "Resources/fps_images-ipadhd.png"; sourceTree = "<group>"; };
+		83DF787F16A84B5A007F09E8 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Resources/Icon-72.png"; sourceTree = "<group>"; };
+		83DF788116A84B5A007F09E8 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
+		83DF788316A84B5A007F09E8 /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small.png"; path = "Resources/Icon-Small.png"; sourceTree = "<group>"; };
+		83DF788516A84B5A007F09E8 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
+		83DF788716A84B5A007F09E8 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Resources/Icon.png; sourceTree = "<group>"; };
+		83DF788916A84B5A007F09E8 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Resources/Icon@2x.png"; sourceTree = "<group>"; };
+		83DF788B16A84B5A007F09E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
+		83DF788C16A84B5A007F09E8 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunesArtwork; path = Resources/iTunesArtwork; sourceTree = "<group>"; };
+		83DF79F616A84B5D007F09E8 /* Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		83DF79F716A84B5D007F09E8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		83DF79F916A84B5D007F09E8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		83DF79FA16A84B5D007F09E8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		83DF79FC16A84B5D007F09E8 /* HelloWorldLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelloWorldLayer.h; sourceTree = "<group>"; };
+		83DF79FD16A84B5D007F09E8 /* HelloWorldLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HelloWorldLayer.m; sourceTree = "<group>"; };
+		83DF79FF16A84B5D007F09E8 /* IntroLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntroLayer.h; sourceTree = "<group>"; };
+		83DF7A0016A84B5D007F09E8 /* IntroLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntroLayer.m; sourceTree = "<group>"; };
+		83DF7A0C16A84CC2007F09E8 /* Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		83DF7A0D16A84CC2007F09E8 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		83DF7A1316A84CC2007F09E8 /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
+		83DF7A1516A84CC2007F09E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		83DF7A1A16A84CC3007F09E8 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
+		83DF7A2E16A84DE6007F09E8 /* CZGRectanglePackerSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CZGRectanglePackerSpec.m; sourceTree = "<group>"; };
+		83DF7A3316A84F07007F09E8 /* CZGRectanglePacker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CZGRectanglePacker.h; sourceTree = "<group>"; };
+		83DF7A3416A84F07007F09E8 /* CZGRectanglePacker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CZGRectanglePacker.m; sourceTree = "<group>"; };
+		B5A11F5E7D3F46568115591C /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.xcconfig"; path = "Pods/Pods-Tests.xcconfig"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		83DF785616A84B5A007F09E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF785E16A84B5A007F09E8 /* QuartzCore.framework in Frameworks */,
+				83DF786016A84B5A007F09E8 /* OpenGLES.framework in Frameworks */,
+				83DF786216A84B5A007F09E8 /* OpenAL.framework in Frameworks */,
+				83DF786416A84B5A007F09E8 /* AudioToolbox.framework in Frameworks */,
+				83DF786616A84B5A007F09E8 /* AVFoundation.framework in Frameworks */,
+				83DF786816A84B5A007F09E8 /* UIKit.framework in Frameworks */,
+				83DF786A16A84B5A007F09E8 /* Foundation.framework in Frameworks */,
+				83DF786C16A84B5A007F09E8 /* CoreGraphics.framework in Frameworks */,
+				83DF786E16A84B5A007F09E8 /* GameKit.framework in Frameworks */,
+				B88AAE0CE29E419C924ADE90 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83DF7A0816A84CC2007F09E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF7A0E16A84CC2007F09E8 /* SenTestingKit.framework in Frameworks */,
+				83DF7A0F16A84CC2007F09E8 /* UIKit.framework in Frameworks */,
+				83DF7A1016A84CC2007F09E8 /* Foundation.framework in Frameworks */,
+				90BECF26630442FAA54C6636 /* libPods-Tests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		83DF784E16A84B5A007F09E8 = {
+			isa = PBXGroup;
+			children = (
+				83DF7A3016A84EA0007F09E8 /* Classes */,
+				83DF786F16A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */,
+				83DF7A1116A84CC2007F09E8 /* Tests */,
+				83DF785C16A84B5A007F09E8 /* Frameworks */,
+				83DF785A16A84B5A007F09E8 /* Products */,
+				3C88CD5AA4164AE3A0EB9C8F /* Pods.xcconfig */,
+				D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		83DF785A16A84B5A007F09E8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				83DF785916A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests.app */,
+				83DF7A0C16A84CC2007F09E8 /* Tests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		83DF785C16A84B5A007F09E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				83DF785D16A84B5A007F09E8 /* QuartzCore.framework */,
+				83DF785F16A84B5A007F09E8 /* OpenGLES.framework */,
+				83DF786116A84B5A007F09E8 /* OpenAL.framework */,
+				83DF786316A84B5A007F09E8 /* AudioToolbox.framework */,
+				83DF786516A84B5A007F09E8 /* AVFoundation.framework */,
+				83DF786716A84B5A007F09E8 /* UIKit.framework */,
+				83DF786916A84B5A007F09E8 /* Foundation.framework */,
+				83DF786B16A84B5A007F09E8 /* CoreGraphics.framework */,
+				83DF786D16A84B5A007F09E8 /* GameKit.framework */,
+				83DF7A0D16A84CC2007F09E8 /* SenTestingKit.framework */,
+				B5A11F5E7D3F46568115591C /* libPods.a */,
+				30FFD1FD1BB6410C8FCC3AB0 /* libPods-Tests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		83DF786F16A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */ = {
+			isa = PBXGroup;
+			children = (
+				83DF79F916A84B5D007F09E8 /* AppDelegate.h */,
+				83DF79FA16A84B5D007F09E8 /* AppDelegate.m */,
+				83DF79FC16A84B5D007F09E8 /* HelloWorldLayer.h */,
+				83DF79FD16A84B5D007F09E8 /* HelloWorldLayer.m */,
+				83DF79FF16A84B5D007F09E8 /* IntroLayer.h */,
+				83DF7A0016A84B5D007F09E8 /* IntroLayer.m */,
+				83DF787016A84B5A007F09E8 /* Resources */,
+				83DF79F516A84B5D007F09E8 /* Supporting Files */,
+			);
+			path = CZGTextureCreatorExamplesAndTests;
+			sourceTree = "<group>";
+		};
+		83DF787016A84B5A007F09E8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				83DF787116A84B5A007F09E8 /* Default.png */,
+				83DF787316A84B5A007F09E8 /* Default@2x.png */,
+				83DF787516A84B5A007F09E8 /* Default-568h@2x.png */,
+				83DF787716A84B5A007F09E8 /* Default-Landscape~ipad.png */,
+				83DF787916A84B5A007F09E8 /* fps_images.png */,
+				83DF787B16A84B5A007F09E8 /* fps_images-hd.png */,
+				83DF787D16A84B5A007F09E8 /* fps_images-ipadhd.png */,
+				83DF787F16A84B5A007F09E8 /* Icon-72.png */,
+				83DF788116A84B5A007F09E8 /* Icon-Small-50.png */,
+				83DF788316A84B5A007F09E8 /* Icon-Small.png */,
+				83DF788516A84B5A007F09E8 /* Icon-Small@2x.png */,
+				83DF788716A84B5A007F09E8 /* Icon.png */,
+				83DF788916A84B5A007F09E8 /* Icon@2x.png */,
+				83DF788B16A84B5A007F09E8 /* Info.plist */,
+				83DF788C16A84B5A007F09E8 /* iTunesArtwork */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		83DF79F516A84B5D007F09E8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				83DF79F616A84B5D007F09E8 /* Prefix.pch */,
+				83DF79F716A84B5D007F09E8 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		83DF7A1116A84CC2007F09E8 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				83DF7A1216A84CC2007F09E8 /* Supporting Files */,
+				83DF7A2E16A84DE6007F09E8 /* CZGRectanglePackerSpec.m */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		83DF7A1216A84CC2007F09E8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				83DF7A1316A84CC2007F09E8 /* Tests-Info.plist */,
+				83DF7A1416A84CC2007F09E8 /* InfoPlist.strings */,
+				83DF7A1A16A84CC3007F09E8 /* Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		83DF7A3016A84EA0007F09E8 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				83DF7A3316A84F07007F09E8 /* CZGRectanglePacker.h */,
+				83DF7A3416A84F07007F09E8 /* CZGRectanglePacker.m */,
+			);
+			name = Classes;
+			path = ../Classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		83DF785816A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83DF7A0416A84B5D007F09E8 /* Build configuration list for PBXNativeTarget "CZGTextureCreatorExamplesAndTests" */;
+			buildPhases = (
+				83DF785516A84B5A007F09E8 /* Sources */,
+				83DF785616A84B5A007F09E8 /* Frameworks */,
+				83DF785716A84B5A007F09E8 /* Resources */,
+				A54E7EB15CC1457FB68057D2 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CZGTextureCreatorExamplesAndTests;
+			productName = CZGTextureCreatorExamplesAndTests;
+			productReference = 83DF785916A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests.app */;
+			productType = "com.apple.product-type.application";
+		};
+		83DF7A0B16A84CC2007F09E8 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83DF7A1B16A84CC3007F09E8 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				83DF7A0716A84CC2007F09E8 /* Sources */,
+				83DF7A0816A84CC2007F09E8 /* Frameworks */,
+				83DF7A0916A84CC2007F09E8 /* Resources */,
+				83DF7A0A16A84CC2007F09E8 /* ShellScript */,
+				A4B2CDE3E42F45EB839A54D4 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83DF7A3216A84EB3007F09E8 /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 83DF7A0C16A84CC2007F09E8 /* Tests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		83DF785016A84B5A007F09E8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = ZWorkbench;
+			};
+			buildConfigurationList = 83DF785316A84B5A007F09E8 /* Build configuration list for PBXProject "CZGTextureCreatorExamplesAndTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 83DF784E16A84B5A007F09E8;
+			productRefGroup = 83DF785A16A84B5A007F09E8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				83DF785816A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */,
+				83DF7A0B16A84CC2007F09E8 /* Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		83DF785716A84B5A007F09E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF787216A84B5A007F09E8 /* Default.png in Resources */,
+				83DF787416A84B5A007F09E8 /* Default@2x.png in Resources */,
+				83DF787616A84B5A007F09E8 /* Default-568h@2x.png in Resources */,
+				83DF787816A84B5A007F09E8 /* Default-Landscape~ipad.png in Resources */,
+				83DF787A16A84B5A007F09E8 /* fps_images.png in Resources */,
+				83DF787C16A84B5A007F09E8 /* fps_images-hd.png in Resources */,
+				83DF787E16A84B5A007F09E8 /* fps_images-ipadhd.png in Resources */,
+				83DF788016A84B5A007F09E8 /* Icon-72.png in Resources */,
+				83DF788216A84B5A007F09E8 /* Icon-Small-50.png in Resources */,
+				83DF788416A84B5A007F09E8 /* Icon-Small.png in Resources */,
+				83DF788616A84B5A007F09E8 /* Icon-Small@2x.png in Resources */,
+				83DF788816A84B5A007F09E8 /* Icon.png in Resources */,
+				83DF788A16A84B5A007F09E8 /* Icon@2x.png in Resources */,
+				83DF788D16A84B5A007F09E8 /* iTunesArtwork in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83DF7A0916A84CC2007F09E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF7A1616A84CC2007F09E8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		83DF7A0A16A84CC2007F09E8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		A4B2CDE3E42F45EB839A54D4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-Tests-resources.sh\"\n";
+		};
+		A54E7EB15CC1457FB68057D2 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		83DF785516A84B5A007F09E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF79F816A84B5D007F09E8 /* main.m in Sources */,
+				83DF79FB16A84B5D007F09E8 /* AppDelegate.m in Sources */,
+				83DF79FE16A84B5D007F09E8 /* HelloWorldLayer.m in Sources */,
+				83DF7A0116A84B5D007F09E8 /* IntroLayer.m in Sources */,
+				83DF7A3516A84F07007F09E8 /* CZGRectanglePacker.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83DF7A0716A84CC2007F09E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83DF7A2F16A84DE6007F09E8 /* CZGRectanglePackerSpec.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		83DF7A3216A84EB3007F09E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83DF785816A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */;
+			targetProxy = 83DF7A3116A84EB3007F09E8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		83DF7A1416A84CC2007F09E8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				83DF7A1516A84CC2007F09E8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		83DF7A0216A84B5D007F09E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG,
+					"COCOS2D_DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		83DF7A0316A84B5D007F09E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					"NS_BLOCK_ASSERTIONS=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		83DF7A0516A84B5D007F09E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C88CD5AA4164AE3A0EB9C8F /* Pods.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CZGTextureCreatorExamplesAndTests/Prefix.pch;
+				INFOPLIST_FILE = CZGTextureCreatorExamplesAndTests/Resources/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		83DF7A0616A84B5D007F09E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C88CD5AA4164AE3A0EB9C8F /* Pods.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CZGTextureCreatorExamplesAndTests/Prefix.pch;
+				INFOPLIST_FILE = CZGTextureCreatorExamplesAndTests/Resources/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		83DF7A1C16A84CC3007F09E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		83DF7A1D16A84CC3007F09E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Tests/Tests-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				INFOPLIST_FILE = "Tests/Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		83DF785316A84B5A007F09E8 /* Build configuration list for PBXProject "CZGTextureCreatorExamplesAndTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83DF7A0216A84B5D007F09E8 /* Debug */,
+				83DF7A0316A84B5D007F09E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83DF7A0416A84B5D007F09E8 /* Build configuration list for PBXNativeTarget "CZGTextureCreatorExamplesAndTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83DF7A0516A84B5D007F09E8 /* Debug */,
+				83DF7A0616A84B5D007F09E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83DF7A1B16A84CC3007F09E8 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83DF7A1C16A84CC3007F09E8 /* Debug */,
+				83DF7A1D16A84CC3007F09E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 83DF785016A84B5A007F09E8 /* Project object */;
+}
