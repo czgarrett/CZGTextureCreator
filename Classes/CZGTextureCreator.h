@@ -26,5 +26,8 @@ typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
 
 - (CCTexture2D *) createTexture;
 
+// Removes all of the sprite frames from the cache.  This will allow the texture to be released.
+- (void) clearFramesFromCache;
+
 
 @end

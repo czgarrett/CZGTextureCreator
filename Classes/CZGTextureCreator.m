@@ -71,6 +71,13 @@
     return texture;
 }
 
+- (void) clearFramesFromCache {
+    CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+    for (NSString *key in [self.drawingBlocks allKeys]) {
+        [frameCache removeSpriteFrameByName: key];
+    }
+}
+
 - (UIImage *) createImage {
     [self.rectanglePacker pack];
     UIGraphicsBeginImageContext([self.rectanglePacker packedSize]);
