@@ -2,5 +2,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#import <CoreText/CoreText.h>
+
 
 #define CC_ENABLE_GL_STATE_CACHE 1

@@ -9,6 +9,9 @@
 
 // Import the interfaces
 #import "HelloWorldLayer.h"
+#import "CZGRectanglePacker.h"
+#import "CZGTextureCreator.h"
+#import "DTCoreText.h"
 
 // Needed to obtain the Navigation Controller
 #import "AppDelegate.h"
@@ -41,65 +44,64 @@
 	// Apple recommends to re-assign "self" with the "super's" return value
 	if( (self=[super init]) ) {
 		
-		// create and initialize a Label
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
+        CZGTextureCreator *textureCreator = [[CZGTextureCreator alloc] init];
+        
+        // Core Graphics drawing example
+        [textureCreator addFrameWithName: @"redRectangle"
+                                    size: CGSizeMake(100,50)
+                            drawingBlock: ^(CGRect rect, CGContextRef ctx) {
+                                UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect: CGRectInset(rect, 2.0, 2.0) cornerRadius: 10.0];
+                                path.lineWidth = 2.0;
+                                CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
+                                CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+                                [path fill];
+                                [path stroke];
+        }];
 
-		// ask director for the window size
-		CGSize size = [[CCDirector sharedDirector] winSize];
-	
-		// position the label on the center of the screen
-		label.position =  ccp( size.width /2 , size.height/2 );
-		
-		// add the label as a child to this Layer
-		[self addChild: label];
-		
-		
-		
-		//
-		// Leaderboards and Achievements
-		//
-		
-		// Default font size will be 28 points.
-		[CCMenuItemFont setFontSize:28];
-		
-		// Achievement Menu Item using blocks
-		CCMenuItem *itemAchievement = [CCMenuItemFont itemWithString:@"Achievements" block:^(id sender) {
-			
-			
-			GKAchievementViewController *achievementViewController = [[GKAchievementViewController alloc] init];
-			achievementViewController.achievementDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:achievementViewController animated:YES];
-			
-			[achievementViewController release];
-		}
-									   ];
+        // Simple text drawing
+        [textureCreator addFrameWithName: @"howdy"
+                                    size: CGSizeMake(100,20)
+                            drawingBlock: ^(CGRect rect, CGContextRef ctx) {
+            CGContextSetFillColorWithColor(ctx, [UIColor greenColor].CGColor);
+            [@"howdy" drawInRect: rect withFont: [UIFont boldSystemFontOfSize: 15.0]];
+        }];
+        
+        // CZGTextureCreator uses DTCoreText to provide an HTML convenience method.
+        // Here's an example of creating a single label frame that has formatted HTML text
+        textureCreator.defaultTextOptions =  @{  DTDefaultFontFamily : @"Futura",
+                                                 DTDefaultTextColor  : @"white"};
+        [textureCreator addFrameWithName: @"html"
+                                    size: CGSizeMake(320,200)
+                                htmlText: @"<span style=\"font-size: 16;\">Unladen swallow ground speed: <b>32</b> <i>mph</i></span>"];
 
-		// Leaderboard Menu Item using blocks
-		CCMenuItem *itemLeaderboard = [CCMenuItemFont itemWithString:@"Leaderboard" block:^(id sender) {
-			
-			
-			GKLeaderboardViewController *leaderboardViewController = [[GKLeaderboardViewController alloc] init];
-			leaderboardViewController.leaderboardDelegate = self;
-			
-			AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
-			
-			[[app navController] presentModalViewController:leaderboardViewController animated:YES];
-			
-			[leaderboardViewController release];
-		}
-									   ];
-		
-		CCMenu *menu = [CCMenu menuWithItems:itemAchievement, itemLeaderboard, nil];
-		
-		[menu alignItemsHorizontallyWithPadding:20];
-		[menu setPosition:ccp( size.width/2, size.height/2 - 50)];
-		
-		// Add the menu to the layer
-		[self addChild:menu];
+        CCTexture2D *texture = [textureCreator createTexture];
+        
+        // Create a batch node so that all sprites drawn from the texture are batched into one draw call
+        CCSpriteBatchNode *batchNode = [CCSpriteBatchNode batchNodeWithTexture: texture];
 
+		CCSprite *howdy = [CCSprite spriteWithSpriteFrameName: @"howdy"];
+        howdy.position = ccp(50,50);
+        [batchNode addChild: howdy]; // don't forget to add the sprites to the batch node, not self
+
+        CCSprite *redRectangle = [CCSprite spriteWithSpriteFrameName: @"redRectangle"];
+        redRectangle.position = ccp(300,100);
+        [batchNode addChild: redRectangle];
+
+        CCSprite *html = [CCSprite spriteWithSpriteFrameName: @"html"];
+        html.anchorPoint = ccp(1.0, 0.5);
+        html.position = ccp(320.0, 200.0);
+        [batchNode addChild: html];
+        
+        // Add the completed frame in the top left to see what it looks like:
+        CCSprite *full = [CCSprite spriteWithTexture: texture rect: CGRectMake(0,0, texture.pixelsWide, texture.pixelsHigh)];
+        full.anchorPoint = ccp(0, 1.0);
+        full.position = ccp(0,300);
+        full.scale = 0.5;
+        [batchNode addChild: full];
+
+        [self addChild: batchNode];
+
+        
 	}
 	return self;
 }
