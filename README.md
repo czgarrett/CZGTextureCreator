@@ -14,6 +14,8 @@ Second, it uses Core Text (via the DTCoreText pod) to create properly typeset te
 
 The only time you wouldn't want to use CZGTextureCreator with text is if you are rapidly changing text, such as in a rapidly changing score counter.  Any other time, this should be significantly faster, a better use of resources, and easier on designers' eyes than the standard Cocos2d labels.
 
+Thanks to [@blackpawn](http://www.twitter.com/blackpawn) for his [pseudocode for packing rectangles](http://www.blackpawn.com/texts/lightmaps/).  I used a variation in my own algorithm for packing the texture rects.
+
 
 Installation:
 ---
