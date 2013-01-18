@@ -22,7 +22,7 @@ CZGTextureCreator is wrapped up as a [cocoapod](cocoapods.org).  The easiest way
 
 Example:
 ---
-
+```objective-c
 	CZGTextureCreator *textureCreator = [[CZGTextureCreator alloc] init];
   
 	// Core Graphics drawing example
@@ -53,6 +53,7 @@ Example:
 	                            size: CGSizeMake(320,200)
 	                        htmlText: @"<span style=\"font-size: 16;\">Unladen swallow ground speed: <b>32</b> <i>mph</i></span>"];
 
+	// Texture creator will then pack the above frames and call the draw blocks for each one.  It will also add the frame names to the texture frame cache.
 	CCTexture2D *texture = [textureCreator createTexture];
 
 	// Create a batch node so that all sprites drawn from the texture are batched into one draw call
@@ -79,3 +80,4 @@ Example:
 	[batchNode addChild: full];
 
 	[self addChild: batchNode];
+```
