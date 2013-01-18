@@ -1,7 +1,7 @@
 CZGTextureCreator
 =================
 
-CZGTextureCreator is a cocos2d-based class that allows you to draw multiple images, then packs them into a single CCTexture so that they can be used in batch nodes.
+CZGTextureCreator is a cocos2d-based class that allows you to draw multiple images or Core Text frames.  It then packs them into a single CCTexture2D so that they can be used in batch nodes.
 
 Overview:
 ---
@@ -30,7 +30,7 @@ Example:
 	                            size: CGSizeMake(100,50)
 	                    drawingBlock: ^(CGRect rect, CGContextRef ctx) {
 	                        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect: CGRectInset(rect, 2.0, 2.0) 
-																									cornerRadius: 10.0];
+	                                                                        cornerRadius: 10.0];
 	                        path.lineWidth = 2.0;
 	                        CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
 	                        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
@@ -77,7 +77,7 @@ Example:
 
 	// Add the completed frame in the top left to see what it looks like:
 	CCSprite *full = [CCSprite spriteWithTexture: texture 
-														 rect: CGRectMake(0,0, texture.pixelsWide, texture.pixelsHigh)];
+	                                        rect: CGRectMake(0,0, texture.pixelsWide, texture.pixelsHigh)];
 	full.anchorPoint = ccp(0, 1.0);
 	full.position = ccp(0,300);
 	full.scale = 0.5;
