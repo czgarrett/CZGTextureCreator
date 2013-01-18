@@ -29,7 +29,8 @@ Example:
 	[textureCreator addFrameWithName: @"redRectangle"
 	                            size: CGSizeMake(100,50)
 	                    drawingBlock: ^(CGRect rect, CGContextRef ctx) {
-	                        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect: CGRectInset(rect, 2.0, 2.0) cornerRadius: 10.0];
+	                        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect: CGRectInset(rect, 2.0, 2.0) 
+																									cornerRadius: 10.0];
 	                        path.lineWidth = 2.0;
 	                        CGContextSetFillColorWithColor(ctx, [UIColor redColor].CGColor);
 	                        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
@@ -49,11 +50,13 @@ Example:
 	// Here's an example of creating a single label frame that has formatted HTML text
 	textureCreator.defaultTextOptions =  @{  DTDefaultFontFamily : @"Futura",
 	                                         DTDefaultTextColor  : @"white"};
+	NSString *htmlText = @"<span style=\"font-size: 16;\">Unladen swallow ground speed: <b>32</b> <i>mph</i></span>";
 	[textureCreator addFrameWithName: @"html"
 	                            size: CGSizeMake(320,200)
-	                        htmlText: @"<span style=\"font-size: 16;\">Unladen swallow ground speed: <b>32</b> <i>mph</i></span>"];
+	                        htmlText: htmlText];
 
-	// Texture creator will then pack the above frames and call the draw blocks for each one.  It will also add the frame names to the texture frame cache.
+	// Texture creator will then pack the above frames and call the draw blocks for each one.  
+	// It will also add the frame names to the texture frame cache.
 	CCTexture2D *texture = [textureCreator createTexture];
 
 	// Create a batch node so that all sprites drawn from the texture are batched into one draw call
@@ -73,7 +76,8 @@ Example:
 	[batchNode addChild: html];
 
 	// Add the completed frame in the top left to see what it looks like:
-	CCSprite *full = [CCSprite spriteWithTexture: texture rect: CGRectMake(0,0, texture.pixelsWide, texture.pixelsHigh)];
+	CCSprite *full = [CCSprite spriteWithTexture: texture 
+														 rect: CGRectMake(0,0, texture.pixelsWide, texture.pixelsHigh)];
 	full.anchorPoint = ccp(0, 1.0);
 	full.position = ccp(0,300);
 	full.scale = 0.5;
