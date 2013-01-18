@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name         = 'CZGTextureCreator'
   s.version      = '0.2.0'
   s.license      = 'MIT'
-  s.summary      = 'A cocos2d class for creating textures with multiple images using Core Graphics.'
+  s.summary      = 'A cocos2d class for drawing textures with Core Graphics and Core Text.'
   s.homepage     = 'https://github.com/czgarrett/CZGTextureCreator'
   s.authors      = {'Christopher Z. Garrett' => 'z@zworkbench.com'}
   s.source       = { :git => 'https://github.com/czgarrett/CZGTextureCreator.git', :tag => 'v0.2.0' }

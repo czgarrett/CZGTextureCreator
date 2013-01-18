@@ -101,7 +101,7 @@
 
         [self addChild: batchNode];
 
-        
+        [textureCreator clearFramesFromCache];
 	}
 	return self;
 }
