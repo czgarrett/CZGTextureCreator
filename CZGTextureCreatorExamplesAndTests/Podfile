@@ -6,6 +6,6 @@ podspec :path => "../CZGTextureCreator.podspec"
 pod 'cocos2d', '~> 2.0.0'
 pod 'DTCoreText', '~> 1.1.0'
 
-target :Tests, :exclusive => true do
+target :Tests do
     pod 'Kiwi'
 end

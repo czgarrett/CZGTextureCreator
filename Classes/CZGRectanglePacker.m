@@ -33,6 +33,7 @@
         self.totalArea = 0.0;
         self.packedRects = [NSMutableDictionary dictionary];
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxDimension);
+        _maxDimension = _maxDimension / [UIScreen mainScreen].scale;
     }
     return self;
 }

@@ -63,9 +63,11 @@
 - (CCTexture2D *) createTexture {
     CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
     
-    CCTexture2D *texture = [[CCTexture2D alloc] initWithCGImage: [self createImage].CGImage resolutionType: kCCResolutioniPhone];
+    CCTexture2D *texture = [[CCTexture2D alloc] initWithCGImage: [self createImage].CGImage
+                                                 resolutionType: kCCResolutioniPhone];
     for (NSString *key in [self.drawingBlocks allKeys]) {
-        CCSpriteFrame *frame = [CCSpriteFrame frameWithTexture: texture rect: [self.rectanglePacker rectForKey: key]];
+        CCSpriteFrame *frame = [CCSpriteFrame frameWithTexture: texture
+                                                          rect: [self.rectanglePacker rectForKey: key]];
         [frameCache addSpriteFrame: frame name: key];
     }
     return texture;
@@ -79,12 +81,19 @@
 }
 
 - (UIImage *) createImage {
+    CGFloat scale = [UIScreen mainScreen].scale;
     [self.rectanglePacker pack];
-    UIGraphicsBeginImageContext([self.rectanglePacker packedSize]);
+    CGSize size = [self.rectanglePacker packedSize];
+    size.width *= scale;
+    size.height *= scale;
+    UIGraphicsBeginImageContext(size);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextScaleCTM(ctx, scale, scale);
     for (NSString *key in [self.drawingBlocks allKeys]) {
         CZGDrawBlock draw = self.drawingBlocks[key];
+        CGContextSaveGState(ctx);
         draw([self.rectanglePacker rectForKey: key], ctx);
+        CGContextRestoreGState(ctx);
     }
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
