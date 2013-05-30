@@ -21,4 +21,3 @@ install_resource()
       ;;
   esac
 }
-install_resource 'DTCoreText/Demo/Resources/DTCoreTextFontOverrides.plist'

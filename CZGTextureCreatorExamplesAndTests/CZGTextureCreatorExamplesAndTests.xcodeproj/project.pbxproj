@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		838D663A16AEEAEF009B577F /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 838D663916AEEAEF009B577F /* libPods-Tests.a */; };
 		83DF785E16A84B5A007F09E8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF785D16A84B5A007F09E8 /* QuartzCore.framework */; };
 		83DF786016A84B5A007F09E8 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF785F16A84B5A007F09E8 /* OpenGLES.framework */; };
 		83DF786216A84B5A007F09E8 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DF786116A84B5A007F09E8 /* OpenAL.framework */; };
@@ -42,7 +43,6 @@
 		83DF7A3516A84F07007F09E8 /* CZGRectanglePacker.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A3416A84F07007F09E8 /* CZGRectanglePacker.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		83DF7A3816A88E20007F09E8 /* CZGTextureCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A3716A88E20007F09E8 /* CZGTextureCreator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		83DF7A3A16A88E3F007F09E8 /* CZGTextureCreatorSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 83DF7A3916A88E3F007F09E8 /* CZGTextureCreatorSpec.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		90BECF26630442FAA54C6636 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30FFD1FD1BB6410C8FCC3AB0 /* libPods-Tests.a */; };
 		B88AAE0CE29E419C924ADE90 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A11F5E7D3F46568115591C /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +59,7 @@
 /* Begin PBXFileReference section */
 		30FFD1FD1BB6410C8FCC3AB0 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C88CD5AA4164AE3A0EB9C8F /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		838D663916AEEAEF009B577F /* libPods-Tests.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libPods-Tests.a"; path = "Pods/build/Release-iphoneos/libPods-Tests.a"; sourceTree = "<group>"; };
 		83DF785916A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CZGTextureCreatorExamplesAndTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83DF785D16A84B5A007F09E8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		83DF785F16A84B5A007F09E8 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -130,9 +131,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				83DF7A0E16A84CC2007F09E8 /* SenTestingKit.framework in Frameworks */,
+				838D663A16AEEAEF009B577F /* libPods-Tests.a in Frameworks */,
 				83DF7A0F16A84CC2007F09E8 /* UIKit.framework in Frameworks */,
 				83DF7A1016A84CC2007F09E8 /* Foundation.framework in Frameworks */,
-				90BECF26630442FAA54C6636 /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +143,7 @@
 		83DF784E16A84B5A007F09E8 = {
 			isa = PBXGroup;
 			children = (
+				838D663916AEEAEF009B577F /* libPods-Tests.a */,
 				83DF7A3016A84EA0007F09E8 /* Classes */,
 				83DF786F16A84B5A007F09E8 /* CZGTextureCreatorExamplesAndTests */,
 				83DF7A1116A84CC2007F09E8 /* Tests */,
@@ -519,7 +521,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CZGTextureCreatorExamplesAndTests.app/CZGTextureCreatorExamplesAndTests";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -538,6 +539,8 @@
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PODS_BUILD_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/BuildHeaders\" \"${PODS_ROOT}/BuildHeaders/DTCoreText\" \"${PODS_ROOT}/BuildHeaders/DTFoundation\" \"${PODS_ROOT}/BuildHeaders/cocos2d\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms/iOS\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms/Mac\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Support\" \"${PODS_ROOT}/BuildHeaders/external/kazmath/include\" \"${PODS_ROOT}/BuildHeaders/external/kazmath/include/kazmath/GL\" \"${PODS_ROOT}/BuildHeaders/Kiwi\"";
+				PODS_PUBLIC_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/Headers\" \"${PODS_ROOT}/Headers/DTCoreText\" \"${PODS_ROOT}/Headers/DTFoundation\" \"${PODS_ROOT}/Headers/cocos2d\" \"${PODS_ROOT}/Headers/cocos2d/Platforms\" \"${PODS_ROOT}/Headers/cocos2d/Platforms/iOS\" \"${PODS_ROOT}/Headers/cocos2d/Platforms/Mac\" \"${PODS_ROOT}/Headers/cocos2d/Support\" \"${PODS_ROOT}/Headers/external/kazmath/include\" \"${PODS_ROOT}/Headers/external/kazmath/include/kazmath/GL\" \"${PODS_ROOT}/Headers/Kiwi\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -548,7 +551,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D57438B4F1B54A0DA397F0D5 /* Pods-Tests.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/CZGTextureCreatorExamplesAndTests.app/CZGTextureCreatorExamplesAndTests";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -561,6 +563,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "Tests/Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PODS_BUILD_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/BuildHeaders\" \"${PODS_ROOT}/BuildHeaders/DTCoreText\" \"${PODS_ROOT}/BuildHeaders/DTFoundation\" \"${PODS_ROOT}/BuildHeaders/cocos2d\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms/iOS\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Platforms/Mac\" \"${PODS_ROOT}/BuildHeaders/cocos2d/Support\" \"${PODS_ROOT}/BuildHeaders/external/kazmath/include\" \"${PODS_ROOT}/BuildHeaders/external/kazmath/include/kazmath/GL\" \"${PODS_ROOT}/BuildHeaders/Kiwi\"";
+				PODS_PUBLIC_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/Headers\" \"${PODS_ROOT}/Headers/DTCoreText\" \"${PODS_ROOT}/Headers/DTFoundation\" \"${PODS_ROOT}/Headers/cocos2d\" \"${PODS_ROOT}/Headers/cocos2d/Platforms\" \"${PODS_ROOT}/Headers/cocos2d/Platforms/iOS\" \"${PODS_ROOT}/Headers/cocos2d/Platforms/Mac\" \"${PODS_ROOT}/Headers/cocos2d/Support\" \"${PODS_ROOT}/Headers/external/kazmath/include\" \"${PODS_ROOT}/Headers/external/kazmath/include/kazmath/GL\" \"${PODS_ROOT}/Headers/Kiwi\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				VALIDATE_PRODUCT = YES;

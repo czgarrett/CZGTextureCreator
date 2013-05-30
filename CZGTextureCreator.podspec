@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes'
   s.requires_arc = true
   s.dependency 'cocos2d', '~> 2.0.0'
-  s.dependency 'DTCoreText', '~> 1.1.0'
+  s.dependency 'DTCoreText', '~> 1.5.2'
 end
