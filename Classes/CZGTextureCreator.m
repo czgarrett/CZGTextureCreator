@@ -36,12 +36,18 @@
     self.drawingBlocks[name] = [drawingBlock copy];
 }
 
-- (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html {
+- (void) addFrameWithName:(NSString *)name size:(CGSize)size htmlText:(NSString *)html {
+    [self addFrameWithName: name
+                      size: size
+                  htmlText: html
+           backgroundBlock: nil];
+}
+
+- (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html backgroundBlock:(CZGDrawBlock) backgroundBlock {
     NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
-    NSAttributedString *string = [[NSAttributedString alloc] initWithHTMLData:data
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithHTMLData:data
                                                                       options: self.defaultTextOptions
                                                            documentAttributes: nil];
-    
     DTCoreTextLayouter *layouter = [[DTCoreTextLayouter alloc] initWithAttributedString: string];
     DTCoreTextLayoutFrame *frame = [layouter layoutFrameWithRect: CGRectMake(0,0,size.width, size.height) range: NSMakeRange(0, 0)];
     //CGSize neededSize = [layouter suggestedFrameSizeToFitEntireStringConstraintedToWidth: size.width];
@@ -49,11 +55,16 @@
     CGSize neededSize = [frame intrinsicContentFrame].size;
     neededSize.height += 5.0;
     
+    UIEdgeInsets blockInsets = _frameInsets;
+    
     [self addFrameWithName: name
-                      size: CGSizeMake(neededSize.width, neededSize.height+5.0)
+                      size: CGSizeMake(neededSize.width + _frameInsets.left + _frameInsets.right, neededSize.height+_frameInsets.top + _frameInsets.bottom + 5.0)
               drawingBlock: ^(CGRect rect, CGContextRef ctx) {
+                  if (backgroundBlock) {
+                      backgroundBlock(rect, ctx);
+                  }
                   DTCoreTextLayoutFrame *layoutFrame;
-                  layoutFrame = [layouter layoutFrameWithRect:rect
+                  layoutFrame = [layouter layoutFrameWithRect: UIEdgeInsetsInsetRect(rect, blockInsets)
                                                         range: NSMakeRange(0, 0)];
                   [layoutFrame drawInContext: ctx options: DTCoreTextLayoutFrameDrawingOmitLinks | DTCoreTextLayoutFrameDrawingOmitAttachments];
               }];
@@ -62,8 +73,8 @@
 
 
 - (CCTexture2D *) createTexture {
-    CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
     
+    CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
     CCTexture2D *texture = [[CCTexture2D alloc] initWithCGImage: [self createImage].CGImage
                                                  resolutionType: kCCResolutioniPhone];
     for (NSString *key in [self.drawingBlocks allKeys]) {

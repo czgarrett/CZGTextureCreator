@@ -20,8 +20,10 @@ typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
                                           DTDefaultTextColor  : @"white"};
  */
 @property (nonatomic, strong) NSDictionary *defaultTextOptions;
+@property (nonatomic, assign) UIEdgeInsets frameInsets;
 
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size drawingBlock: (CZGDrawBlock) drawingBlock;
+- (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html backgroundBlock: (CZGDrawBlock) drawingBlock;
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html;
 
 - (CCTexture2D *) createTexture;
