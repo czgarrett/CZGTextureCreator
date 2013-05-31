@@ -1,13 +1,13 @@
 //
 //  DTWebVideoView.m
-//  CoreTextExtensions
+//  DTCoreText
 //
 //  Created by Oliver Drobnik on 8/5/11.
 //  Copyright 2011 Drobnik.com. All rights reserved.
 //
 
 #import "DTWebVideoView.h"
-#import "DTTextAttachment.h"
+#import "DTIframeTextAttachment.h"
 
 
 @interface DTWebVideoView ()
@@ -77,12 +77,18 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-	// only allow the embed request
-	if ([[[request URL] absoluteString] hasPrefix:@"http://www.youtube.com/embed/"])
+	// allow the embed request for YouTube
+	if (NSNotFound != [[[request URL] absoluteString] rangeOfString:@"www.youtube.com/embed/"].location)
 	{
 		return YES;
 	}
-	
+
+	// allow the embed request for DailyMotion Cloud
+	if (NSNotFound != [[[request URL] absoluteString] rangeOfString:@"api.dmcloud.net/player/embed/"].location)
+	{
+		return YES;
+	}
+
 	BOOL shouldOpenExternalURL = YES;
 	
 	if ([_delegate respondsToSelector:@selector(videoView:shouldOpenExternalURL:)])
@@ -108,19 +114,12 @@
 	{
 		
 		_attachment = attachment;
-	}
-	
-	switch (attachment.contentType) 
-	{
-		case DTTextAttachmentTypeIframe:
+		
+		if ([attachment isKindOfClass:[DTIframeTextAttachment class]])
 		{
 			NSURLRequest *request = [NSURLRequest requestWithURL:attachment.contentURL];
 			[_webView loadRequest:request];
-			break;
 		}
-			
-		default:
-			break;
 	}
 }
 

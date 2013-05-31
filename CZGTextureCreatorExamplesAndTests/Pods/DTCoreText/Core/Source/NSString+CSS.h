@@ -20,12 +20,26 @@
 - (NSDictionary *)dictionaryOfCSSStyles;
 
 /**
+ Determines if the receiver contains a CSS length value, that is a number (with optional period) and a unit (em, pt, px).
+ @returns `YES` if this is a CSS length value
+ */
+- (BOOL)isCSSLengthValue;
+
+/**
  Calculates a pixel-based length from the receiver based on the current text size in pixels. Used in DTHTMLElement.
  @param textSize The current size which the CSS size is relative to.
  @param textScale The factor by which absolute sizes are scaled. Set to 1.0f to keep the original value.
  @returns A float that is the textSize
  */
 - (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize textScale:(CGFloat)textScale;
+
+/**
+ Decodes edge inset values from the CSS attribute string. This is used for margin andpadding which might have varying number of elements.
+ @param textSize The current size which the CSS size is relative to.
+ @param textScale The factor by which absolute sizes are scaled. Set to 1.0f to keep the original value.
+ @returns The edge insets that this describes
+ */
+- (DTEdgeInsets)DTEdgeInsetsRelativeToCurrentTextSize:(CGFloat)textSize textScale:(CGFloat)textScale;
 
 /**
  Parse CSS shadow styles, consisting of color, blur, and offset, out of this string. The input string must be comma delimited in the format: <length> <length> <length>? <color>? where the third length and the color are not required per CSS shadows. To calculate the sizes of the blur and offset pixelSizeOfCSSMeasureRelativeToCurrentTextSize is used. Used in DTHTMLElement.

@@ -13,14 +13,15 @@ NSString * const NSAttachmentAttributeName = @"NSAttachmentAttributeName";
 
 NSString * const DTMaxImageSize = @"DTMaxImageSize";
 NSString * const DTDefaultFontFamily = @"DTDefaultFontFamily";
+NSString * const DTDefaultFontSize = @"DTDefaultFontSize";
 NSString * const DTDefaultTextColor = @"DTDefaultTextColor";
 NSString * const DTDefaultLinkColor = @"DTDefaultLinkColor";
+NSString * const DTDefaultLinkHighlightColor = @"DTDefaultLinkHighlightColor";
 NSString * const DTDefaultLinkDecoration = @"DTDefaultLinkDecoration";
 NSString * const DTDefaultTextAlignment = @"DTDefaultTextAlignment";
 NSString * const DTDefaultLineHeightMultiplier = @"DTDefaultLineHeightMultiplier";
 NSString * const DTDefaultFirstLineHeadIndent = @"DTDefaultFirstLineHeadIndent";
 NSString * const DTDefaultHeadIndent = @"DTDefaultHeadIndent";
-NSString * const DTDefaultListIndent = @"DTDefaultListIndent";
 NSString * const DTDefaultStyleSheet = @"DTDefaultStyleSheet";
 NSString * const DTUseiOS6Attributes = @"DTUseiOS6Attributes";
 NSString * const DTWillFlushBlockCallBack = @"DTWillFlushBlockCallBack";
@@ -29,7 +30,8 @@ NSString * const DTWillFlushBlockCallBack = @"DTWillFlushBlockCallBack";
 
 NSString * const DTTextListsAttribute = @"DTTextLists";
 NSString * const DTAttachmentParagraphSpacingAttribute = @"DTAttachmentParagraphSpacing";
-NSString * const DTLinkAttribute = @"DTLink";
+NSString * const DTLinkAttribute = @"NSLinkAttributeName";
+NSString * const DTLinkHighlightColorAttribute = @"DTLinkHighlightColor";
 NSString * const DTAnchorAttribute = @"DTAnchor";
 NSString * const DTGUIDAttribute = @"DTGUID";
 NSString * const DTHeaderLevelAttribute = @"DTHeaderLevel";
@@ -40,6 +42,9 @@ NSString * const DTShadowsAttribute = @"DTShadows";
 NSString * const DTHorizontalRuleStyleAttribute = @"DTHorizontalRuleStyle";
 NSString * const DTTextBlocksAttribute = @"DTTextBlocks";
 NSString * const DTFieldAttribute = @"DTField";
+
+// field constants
+NSString * const DTListPrefixField = @"{listprefix}";
 
 // iOS 6 compatibility
 

@@ -23,14 +23,42 @@
 	
 	NSMutableDictionary *tmpDict = [NSMutableDictionary dictionary];
 	
-	while ([scanner scanCSSAttribute:&name value:&value])
+	@autoreleasepool
 	{
-		[tmpDict setObject:value forKey:name];
+		while ([scanner scanCSSAttribute:&name value:&value])
+		{
+			[tmpDict setObject:value forKey:name];
+		}
 	}
 	
 	// converting to non-mutable costs 37.5% of method
 	//	return [NSDictionary dictionaryWithDictionary:tmpDict];
 	return tmpDict;
+}
+
+- (BOOL)isCSSLengthValue
+{
+	NSScanner *scanner = [NSScanner scannerWithString:self];
+	
+	NSString *numberStr;
+	
+	if (![scanner scanCharactersFromSet:[NSCharacterSet cssLengthValueCharacterSet] intoString:&numberStr])
+	{
+		return NO;
+	}
+
+	NSString *numberUnitStr;
+	if (![scanner scanCharactersFromSet:[NSCharacterSet cssLengthUnitCharacterSet] intoString:&numberUnitStr])
+	{
+		return NO;
+	}
+	
+	if ([numberUnitStr isEqualToString:@"em"] | [numberUnitStr isEqualToString:@"px"] | [numberUnitStr isEqualToString:@"pt"])
+	{
+		return YES;
+	}
+
+	return NO;
 }
 
 - (CGFloat)pixelSizeOfCSSMeasureRelativeToCurrentTextSize:(CGFloat)textSize textScale:(CGFloat)textScale
@@ -138,9 +166,60 @@
 	return value;
 }
 
+#pragma mark - Margins / Padding
+
+- (DTEdgeInsets)DTEdgeInsetsRelativeToCurrentTextSize:(CGFloat)textSize textScale:(CGFloat)textScale
+{
+		DTEdgeInsets edgeInsets = {0,0,0,0};
+		
+		if ([self length])
+		{
+			// maybe it's using the short style
+			NSArray *parts = [self componentsSeparatedByString:@" "];
+			
+			if ([parts count] == 4)
+			{
+				edgeInsets.top = [[parts objectAtIndex:0] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.right = [[parts objectAtIndex:1] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.bottom = [[parts objectAtIndex:2] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.left = [[parts objectAtIndex:3] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+			}
+			else if ([parts count] == 3)
+			{
+				edgeInsets.top = [[parts objectAtIndex:0] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.right = [[parts objectAtIndex:1] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.bottom = [[parts objectAtIndex:2] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.left = edgeInsets.right;
+			}
+			else if ([parts count] == 2)
+			{
+				edgeInsets.top = [[parts objectAtIndex:0] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.right = [[parts objectAtIndex:1] pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets.bottom = edgeInsets.top;
+				edgeInsets.left = edgeInsets.right;
+			}
+			else
+			{
+				CGFloat paddingAmount = [self pixelSizeOfCSSMeasureRelativeToCurrentTextSize:textSize textScale:textScale];
+				edgeInsets = DTEdgeInsetsMake(paddingAmount, paddingAmount, paddingAmount, paddingAmount);
+			}
+		}
+		
+		return edgeInsets;
+}
+
+#pragma mark - CSS Shadows
+
 - (NSArray *)arrayOfCSSShadowsWithCurrentTextSize:(CGFloat)textSize currentColor:(DTColor *)color
 {
-	NSScanner *scanner = [NSScanner scannerWithString:self];
+	NSString *trimmedString = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	
+	if ([trimmedString isEqualToString:@"none"])
+	{
+		return nil;
+	}
+	
+	NSScanner *scanner = [NSScanner scannerWithString:trimmedString];
 	
 	NSMutableCharacterSet *tokenEndSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
 	[tokenEndSet addCharactersInString:@","];
@@ -203,7 +282,7 @@
 						{
 							if (![scanner scanHTMLColor:&shadowColor])
 							{
-								
+								// invalid color, we ignore this color
 							}
 						}
 					}
@@ -242,8 +321,13 @@
 		}
 	}
 	
+	// only return array if not empty
+	if ([tmpArray count])
+	{
+		return tmpArray;
+	}
 	
-	return tmpArray;
+	return nil;
 }
 
 - (NSString *)stringByDecodingCSSContentAttribute

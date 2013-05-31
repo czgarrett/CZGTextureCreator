@@ -3,7 +3,7 @@ platform :ios, '5.0'
 podspec :path => "../CZGTextureCreator.podspec"
 
 pod 'cocos2d', '~> 2.0.0'
-pod 'DTCoreText', '~> 1.1.0'
+pod 'DTCoreText', '~> 1.5.2'
 
 target :Tests, :exclusive => true do
     pod 'Kiwi'

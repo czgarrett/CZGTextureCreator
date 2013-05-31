@@ -1,6 +1,6 @@
 //
 //  NSString+HTML.m
-//  CoreTextExtensions
+//  DTCoreText
 //
 //  Created by Oliver Drobnik on 1/9/11.
 //  Copyright 2011 Drobnik.com. All rights reserved.
@@ -404,8 +404,17 @@ static NSDictionary *entityReverseLookup = nil;
 			{
 				[tmpString appendFormat:@"%C", oneChar];
 			}
+			else if (CFStringIsSurrogateHighCharacter(oneChar) &&
+							 i < [self length]-1)
+			{
+				i++;
+				unichar surrogateLowChar = [self characterAtIndex:i];
+				UTF32Char u32code = CFStringGetLongCharacterForSurrogatePair(oneChar, surrogateLowChar);
+				[tmpString appendFormat:@"&#%lu;", (unsigned long)u32code];
+			}
 			else
 			{
+				
 				[tmpString appendFormat:@"&#%d;", oneChar];
 			}
 		}

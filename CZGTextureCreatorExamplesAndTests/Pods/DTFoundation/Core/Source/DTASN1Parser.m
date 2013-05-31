@@ -7,6 +7,7 @@
 //
 
 #import "DTASN1Parser.h"
+#import "DTASN1BitString.h"
 
 @implementation DTASN1Parser
 {
@@ -17,16 +18,21 @@
 	NSError *_parserError;
 	BOOL _abortParsing;
 	
+	NSDateFormatter *_UTCFormatter;
+	
 	// lookup bitmask what delegate methods are implemented
-	struct 
+	struct
 	{
 		unsigned int delegateSupportsDocumentStart:1;
 		unsigned int delegateSupportsDocumentEnd:1;
 		unsigned int delegateSupportsContainerStart:1;
 		unsigned int delegateSupportsContainerEnd:1;
+		unsigned int delegateSupportsContextStart:1;
+		unsigned int delegateSupportsContextEnd:1;
 		unsigned int delegateSupportsString:1;
 		unsigned int delegateSupportsInteger:1;
 		unsigned int delegateSupportsData:1;
+		unsigned int delegateSupportsBitString:1;
 		unsigned int delegateSupportsNumber:1;
 		unsigned int delegateSupportsNull:1;
 		unsigned int delegateSupportsError:1;
@@ -46,6 +52,11 @@
 	{
 		_data = data;
 		_dataLength = [data length];
+		
+		// has to end with Z
+		_UTCFormatter = [[NSDateFormatter alloc] init];
+		_UTCFormatter.dateFormat = @"yyMMddHHmmss'Z'";
+		_UTCFormatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
 		
 		if (!_dataLength)
 		{
@@ -83,7 +94,7 @@
 	{
 		retValue = (NSUInteger)buffer;
 	}
-	else if (buffer>0x80) 
+	else if (buffer>0x80)
 	{
 		// next n bytes describe the length length
 		NSUInteger lengthLength = buffer-0x80;
@@ -105,7 +116,7 @@
 		
 		free(lengthBytes);
 	}
-	else 
+	else
 	{
 		// length 0x80 means "indefinite"
 		[self _parseErrorEncountered:@"Indefinite Length form encounted, not implemented"];
@@ -121,12 +132,15 @@
 
 - (BOOL)_parseValueWithTag:(NSUInteger)tag dataRange:(NSRange)dataRange
 {
-    if (!dataRange.length)
-    {
-        return NO;
-    }
-    
-	switch (tag) 
+	if (!dataRange.length && tag != DTASN1TypeNull)
+	{
+		NSLog(@"Encountered zero length data for tag %ld", (unsigned long)tag);
+		
+		// only NULL can have zero length
+		return NO;
+	}
+	
+	switch (tag)
 	{
 		case DTASN1TypeBoolean:
 		{
@@ -172,15 +186,15 @@
 					
 					[_delegate parser:self foundNumber:number];
 				}
-				else 
+				else
 				{
 					// send number as data if supported, too long for 32 bit
 					sendAsData = YES;
 				}
-                
-                free(buffer);
+				
+				free(buffer);
 			}
-			else 
+			else
 			{
 				// send number as data if supported, delegate does not want numbers
 				sendAsData = YES;
@@ -191,7 +205,7 @@
 				char *buffer = malloc(dataRange.length);
 				[_data getBytes:buffer range:dataRange];
 				NSData *data = [NSData dataWithBytesNoCopy:buffer length:dataRange.length freeWhenDone:YES];
-
+				
 				[_delegate parser:self foundData:data];
 			}
 			
@@ -200,23 +214,20 @@
 			
 		case DTASN1TypeBitString:
 		{
-			if (_delegateFlags.delegateSupportsData)
+			if (_delegateFlags.delegateSupportsBitString)
 			{
-			char *buffer = malloc(dataRange.length);
-			[_data getBytes:buffer range:dataRange];
-			
-			// primitive encoding
-			NSUInteger unusedBits = buffer[0];
-			
-			if (unusedBits>0)
-			{
-				[self _parseErrorEncountered:@"Encountered bit string with unused bits > 0, not implemented"];
-				free(buffer);
-				return NO;
-			}
+				char *buffer = malloc(dataRange.length);
+				[_data getBytes:buffer range:dataRange];
 				
-			NSData *data = [NSData dataWithBytesNoCopy:buffer+1 length:dataRange.length-1 freeWhenDone:YES];
-				[_delegate parser:self foundData:data];
+				// primitive encoding
+				NSUInteger unusedBits = buffer[0];
+				
+				NSData *data = [NSData dataWithBytes:buffer+1 length:dataRange.length-1];
+				DTASN1BitString *bitstring = [[DTASN1BitString alloc] initWithData:data unusedBits:unusedBits];
+				
+				[_delegate parser:self foundBitString:bitstring];
+				
+				free(buffer);
 			}
 			
 			break;
@@ -231,7 +242,7 @@
 				NSData *data = [NSData dataWithBytesNoCopy:buffer length:dataRange.length freeWhenDone:YES];
 				
 				[_delegate parser:self foundData:data];
-			}	
+			}
 			
 			break;
 		}
@@ -264,7 +275,7 @@
 					NSUInteger value=0;
 					
 					BOOL more = NO;
-					do 
+					do
 					{
 						unsigned char b = buffer[i];
 						value = value * 128;
@@ -281,7 +292,7 @@
 						{
 							[self _parseErrorEncountered:@"Invalid object identifier with more bit set on last octed"];
 							free(buffer);
-
+							
 							return NO;
 						}
 					} while (more);
@@ -301,19 +312,21 @@
 		case DTASN1TypeTeletexString:
 		case DTASN1TypeGraphicString:
 		case DTASN1TypePrintableString:
+        case DTASN1TypeUTF8String:
+        case DTASN1TypeIA5String:
 		{
 			if (_delegateFlags.delegateSupportsString)
 			{
 				char *buffer = malloc(dataRange.length);
 				[_data getBytes:buffer range:dataRange];
 				
-				NSString *string = [[NSString alloc] initWithBytesNoCopy:buffer length:dataRange.length encoding:NSASCIIStringEncoding freeWhenDone:YES];
+				NSString *string = [[NSString alloc] initWithBytesNoCopy:buffer length:dataRange.length encoding:NSUTF8StringEncoding freeWhenDone:YES];
 				
 				[_delegate parser:self foundString:string];
 			}
 			break;
 		}
-			
+            
 		case DTASN1TypeUTCTime:
 		case DTASN1TypeGeneralizedTime:
 		{
@@ -324,12 +337,7 @@
 				
 				NSString *string = [[NSString alloc] initWithBytesNoCopy:buffer length:dataRange.length encoding:NSASCIIStringEncoding freeWhenDone:YES];
 				
-				// has to end with Z
-				NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-				formatter.dateFormat = @"yyMMddHHmmss'Z'";
-				formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-				
-				NSDate *parsedDate = [formatter dateFromString:string];
+				NSDate *parsedDate = [_UTCFormatter dateFromString:string];
 				
 				if (parsedDate)
 				{
@@ -363,7 +371,7 @@
 	
 	NSUInteger location = range.location;
 	
-	do 
+	do
 	{
 		if (_abortParsing)
 		{
@@ -375,15 +383,11 @@
 		[_data getBytes:&tagByte range:NSMakeRange(location, 1)];
 		location++;
 		
-		
-		BOOL isSeq = tagByte & 32;
-		BOOL isContext = tagByte & 128;
-		
-		//NSUInteger tagClass = tagByte >> 6;
+		NSUInteger tagClass = tagByte >> 6;
 		DTASN1Type tagType = tagByte & 31;
 		BOOL tagConstructed = (tagByte >> 5) & 1;
 		
-		if (tagType == 0x1f)
+		if (tagType == DTASN1TypeUsesLongForm)
 		{
 			[self _parseErrorEncountered:@"Long form not implemented"];
 			return NO;
@@ -404,30 +408,38 @@
 		// make range
 		NSRange subRange = NSMakeRange(location, length);
 		
-		if (isContext)
+		if (NSMaxRange(subRange) > NSMaxRange(range))
 		{
-			//NSLog(@"[%d]", tagType);
+			return NO;
 		}
-		else 
+		
+		if (tagClass == 2)
 		{
-			if (isSeq)
+			if (_delegateFlags.delegateSupportsContextStart)
 			{
-				//NSLog(@"%d", tagType);
+				[_delegate parser:self didStartContextWithTag:tagType];
+			}
+			
+			if (!tagConstructed)
+			{
+				tagType = DTASN1TypeOctetString;
 			}
 		}
 		
 		if (tagConstructed)
 		{
-			// constructed element
-			
 			if (_delegateFlags.delegateSupportsContainerStart)
 			{
 				[_delegate parser:self didStartContainerWithType:tagType];
 			}
 			
-			if (![self _parseRange:subRange])
+			// allow for sequence without content
+			if (subRange.length > 0)
 			{
-				_abortParsing = YES;
+				if (![self _parseRange:subRange])
+				{
+					_abortParsing = YES;
+				}
 			}
 			
 			if (_delegateFlags.delegateSupportsContainerEnd)
@@ -435,12 +447,20 @@
 				[_delegate parser:self didEndContainerWithType:tagType];
 			}
 		}
-		else 
+		else
 		{
 			// primitive
 			if (![self _parseValueWithTag:tagType dataRange:subRange])
 			{
 				_abortParsing = YES;
+			}
+		}
+		
+		if (tagClass == 2)
+		{
+			if (_delegateFlags.delegateSupportsContextStart)
+			{
+				[_delegate parser:self didEndContextWithTag:tagType];
 			}
 		}
 		
@@ -463,19 +483,22 @@
 
 - (BOOL)parse
 {
-	if (_delegateFlags.delegateSupportsDocumentStart)
+	@autoreleasepool
 	{
-		[_delegate parserDidStartDocument:self];
+		if (_delegateFlags.delegateSupportsDocumentStart)
+		{
+			[_delegate parserDidStartDocument:self];
+		}
+		
+		BOOL result = [self _parseRange:NSMakeRange(0, _dataLength)];
+		
+		if (result && _delegateFlags.delegateSupportsDocumentEnd)
+		{
+			[_delegate parserDidEndDocument:self];
+		}
+		
+		return result;
 	}
-	
-	BOOL result = [self _parseRange:NSMakeRange(0, _dataLength)];
-	
-	if (result && _delegateFlags.delegateSupportsDocumentEnd)
-	{
-		[_delegate parserDidEndDocument:self];
-	}
-	
-	return result;
 }
 
 - (void)abortParsing
@@ -503,7 +526,7 @@
 	{
 		_delegateFlags.delegateSupportsDocumentEnd = YES;
 	}
-
+	
 	if ([_delegate respondsToSelector:@selector(parser:didStartContainerWithType:)])
 	{
 		_delegateFlags.delegateSupportsContainerStart = YES;
@@ -512,6 +535,16 @@
 	if ([_delegate respondsToSelector:@selector(parser:didEndContainerWithType:)])
 	{
 		_delegateFlags.delegateSupportsContainerEnd= YES;
+	}
+	
+	if ([_delegate respondsToSelector:@selector(parser:didStartContextWithTag:)])
+	{
+		_delegateFlags.delegateSupportsContextStart = YES;
+	}
+	
+	if ([_delegate respondsToSelector:@selector(parser:didEndContextWithTag:)])
+	{
+		_delegateFlags.delegateSupportsContextEnd = YES;
 	}
 	
 	if ([_delegate respondsToSelector:@selector(parser:parseErrorOccurred:)])
@@ -523,7 +556,7 @@
 	{
 		_delegateFlags.delegateSupportsString = YES;
 	}
-
+	
 	if ([_delegate respondsToSelector:@selector(parserFoundNull:)])
 	{
 		_delegateFlags.delegateSupportsNull = YES;
@@ -538,12 +571,17 @@
 	{
 		_delegateFlags.delegateSupportsData = YES;
 	}
-
+	
+	if ([_delegate respondsToSelector:@selector(parser:foundBitString:)])
+	{
+		_delegateFlags.delegateSupportsBitString = YES;
+	}
+	
 	if ([_delegate respondsToSelector:@selector(parser:foundNumber:)])
 	{
 		_delegateFlags.delegateSupportsNumber = YES;
 	}
-
+	
 	if ([_delegate respondsToSelector:@selector(parser:foundObjectIdentifier:)])
 	{
 		_delegateFlags.delegateSupportsObjectIdentifier = YES;

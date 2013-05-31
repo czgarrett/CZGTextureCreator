@@ -43,8 +43,11 @@
                                                            documentAttributes: nil];
     
     DTCoreTextLayouter *layouter = [[DTCoreTextLayouter alloc] initWithAttributedString: string];
-    CGSize neededSize = [layouter suggestedFrameSizeToFitEntireStringConstraintedToWidth: size.width];
-    neededSize.height = MIN(neededSize.height+5.0, size.height);
+    DTCoreTextLayoutFrame *frame = [layouter layoutFrameWithRect: CGRectMake(0,0,size.width, size.height) range: NSMakeRange(0, 0)];
+    //CGSize neededSize = [layouter suggestedFrameSizeToFitEntireStringConstraintedToWidth: size.width];
+    //neededSize.height = MIN(neededSize.height+5.0, size.height);
+    CGSize neededSize = [frame intrinsicContentFrame].size;
+    neededSize.height += 5.0;
     
     [self addFrameWithName: name
                       size: CGSizeMake(neededSize.width, neededSize.height+5.0)
@@ -52,9 +55,7 @@
                   DTCoreTextLayoutFrame *layoutFrame;
                   layoutFrame = [layouter layoutFrameWithRect:rect
                                                         range: NSMakeRange(0, 0)];
-                  [layoutFrame drawInContext: ctx
-                                  drawImages: NO
-                                   drawLinks: NO];
+                  [layoutFrame drawInContext: ctx options: DTCoreTextLayoutFrameDrawingOmitLinks | DTCoreTextLayoutFrameDrawingOmitAttachments];
               }];
     
 }

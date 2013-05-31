@@ -7,8 +7,57 @@
 //
 
 #import <objc/runtime.h>
+#import "DTObjectBlockExecutor.h"
 
 @implementation NSObject (DTRuntime)
+
+static char DTRuntimeDeallocBlocks;
+
+#pragma mark - Blocks
+
+- (void)addDeallocBlock:(void(^)())block
+{
+    // don't accept NULL block
+    NSParameterAssert(block);
+    
+    NSMutableArray *deallocBlocks = objc_getAssociatedObject(self, &DTRuntimeDeallocBlocks);
+
+    // add array of dealloc blocks if not existing yet
+    if (!deallocBlocks)
+    {
+        deallocBlocks = [[NSMutableArray alloc] init];
+        
+        objc_setAssociatedObject(self, &DTRuntimeDeallocBlocks, deallocBlocks, OBJC_ASSOCIATION_RETAIN);
+    }
+    
+    DTObjectBlockExecutor *executor = [DTObjectBlockExecutor blockExecutorWithDeallocBlock:block];
+    
+    [deallocBlocks addObject:executor];
+}
+
++ (BOOL)addInstanceMethodWithSelectorName:(NSString *)selectorName block:(void(^)(id))block
+{
+    // don't accept nil name
+    NSParameterAssert(selectorName);
+    
+    // don't accept NULL block
+    NSParameterAssert(block);
+    
+    // See http://stackoverflow.com/questions/6357663/casting-a-block-to-a-void-for-dynamic-class-method-resolution
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7
+    void *impBlockForIMP = (void *)objc_unretainedPointer(block);
+#else
+    id impBlockForIMP = (__bridge id)objc_unretainedPointer(block);
+#endif
+    
+    IMP myIMP = imp_implementationWithBlock(impBlockForIMP);
+    
+    SEL selector = NSSelectorFromString(selectorName);
+    return class_addMethod(self, selector, myIMP, "v@:");
+}
+
+#pragma mark - Method Swizzling
 
 + (void)swizzleMethod:(SEL)selector withMethod:(SEL)otherSelector
 {

@@ -1,6 +1,6 @@
 //
 //  DTCoreTextParagraphStyle.h
-//  CoreTextExtensions
+//  DTCoreText
 //
 //  Created by Oliver Drobnik on 4/14/11.
 //  Copyright 2011 Drobnik.com. All rights reserved.
@@ -54,7 +54,7 @@
  @name Bridging to and from NSParagraphStyle
  */
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_5_1
+#if DTCORETEXT_SUPPORT_NS_ATTRIBUTES
 /**
  Create a new paragraph style instance from an `NSParagraphStyle`.
  
@@ -126,7 +126,9 @@
 
 
 /**
-The distance in points from the margin of a text container to the end of lines.
+The distance in points from the margin of a text container to the end of lines. 
+ 
+ @note This value is negative if it is to be measured from the trailing margin, positive if measured from the same margin as the headIndent.
  */
 @property (nonatomic, assign) CGFloat tailIndent;
 
@@ -192,12 +194,6 @@ The distance in points from the margin of a text container to the end of lines.
  Text lists containing the paragraph, nested from outermost to innermost, to array.
 */
 @property (nonatomic, copy) NSArray *textLists;
-
-
-/**
- The amount by which each list level is indented from the previous. NOTE: about to be replaced by textLists property.
- */
-@property (nonatomic, assign) CGFloat listIndent;
 
 
 /**-------------------------------------------------------------------------------------
