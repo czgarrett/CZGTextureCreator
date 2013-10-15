@@ -71,6 +71,15 @@
 - (NSRange)rangeOfAnchorNamed:(NSString *)anchorName;
 
 /**
+ Returns the range of the hyperlink at the given index.
+ 
+ @param location The location to query
+ @param URL The URL that is found at this location or `NULL` if this is not needed
+ @returns The range of the given hyperlink.
+ */
+- (NSRange)rangeOfLinkAtIndex:(NSUInteger)location URL:(NSURL **)URL;
+
+/**
  Returns the range of a field at the given index. 
  
  @param location The location of the field
@@ -78,6 +87,8 @@
  */
 - (NSRange)rangeOfFieldAtIndex:(NSUInteger)location;
 
+#ifndef COVERAGE
+// exclude method from coverage testing, those are just convenience methods
 
 /**
  @name Converting to Other Representations
@@ -107,6 +118,7 @@
  */
 - (NSString *)plainTextString;
 
+#endif
 
 /**
  @name Creating Special Attributed Strings

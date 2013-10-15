@@ -8,16 +8,34 @@
 
 #import <Foundation/Foundation.h>
 
-
-typedef enum
+/**
+ Constant used by DTCustomColoredAccessory to specify the type of accessory.
+ */
+typedef NS_ENUM(NSUInteger, DTCustomColoredAccessoryType)
 {
-    DTCustomColoredAccessoryTypeRight = 0,
-    DTCustomColoredAccessoryTypeUp,
-    DTCustomColoredAccessoryTypeDown
-} DTCustomColoredAccessoryType;
+	/**
+	 An accessoring pointing to the right side
+	 */
+	DTCustomColoredAccessoryTypeRight = 0,
+	
+	/**
+	 An accessoring pointing to the left side
+	 */
+	DTCustomColoredAccessoryTypeLeft,
+	
+	/**
+	 An accessoring pointing upwards
+	 */
+	DTCustomColoredAccessoryTypeUp,
+	
+	/**
+	 An accessoring pointing downwards
+	 */
+	DTCustomColoredAccessoryTypeDown
+};
 
 /**
- An accessory control that can be used instead of the standard disclosure indicator in a `UITableView`. Three styles are supported: right, up and down.
+ An accessory control that can be used instead of the standard disclosure indicator in a `UITableView`. See the DTCustomColoredAccessoryType for supported styles.
  */
 
 @interface DTCustomColoredAccessory : UIControl
@@ -28,16 +46,15 @@ typedef enum
  */
 
 /**
- Creates a custom-colored right accessory with a given color
+ Creates a custom-colored right disclosure indicator accessory with a given color
  @param color The color to use
  */
 + (DTCustomColoredAccessory *)accessoryWithColor:(UIColor *)color;
 
 /**
- Creates a custom-colored right accessory with a given color and type
+ Creates a custom-colored accessory with a given color and type
  @param color The color to use
- @param type The type to use
- @see type
+ @param type The DTCustomColoredAccessoryType to use
  */
 + (DTCustomColoredAccessory *)accessoryWithColor:(UIColor *)color type:(DTCustomColoredAccessoryType)type;
 
@@ -57,11 +74,7 @@ typedef enum
 @property (nonatomic, retain) UIColor *highlightedColor;
 
 /**
- The type of the accessory:
- 
- - DTCustomColoredAccessoryTypeRight
- - DTCustomColoredAccessoryTypeUp
- - DTCustomColoredAccessoryTypeDown
+ The DTCustomColoredAccessoryType of the accessory.
  */
 @property (nonatomic, assign)  DTCustomColoredAccessoryType type;
 

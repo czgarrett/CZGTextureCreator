@@ -67,14 +67,20 @@
  Returns a dictionary that contains the merged style for a given element and the applicable style rules from the receiver.
  
  @param element The HTML element.
+ @param matchedSelectors The CSS selectors that caused a match
  @returns The merged style dictionary containing only styles which selector matches the element
  */
-- (NSDictionary *)mergedStyleDictionaryForElement:(DTHTMLElement *)element;
+- (NSDictionary *)mergedStyleDictionaryForElement:(DTHTMLElement *)element matchedSelectors:(NSSet **)matchedSelectors;
 
 
 /**
  Returns a dictionary of the styles of the receiver
  */
 - (NSDictionary *)styles;
+
+/**
+ Returns an ordered (by declaration) set of the selectors for all of the styles.
+ */
+- (NSArray *)orderedSelectors;
 
 @end

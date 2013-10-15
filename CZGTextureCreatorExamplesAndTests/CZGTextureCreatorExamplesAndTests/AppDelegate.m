@@ -124,7 +124,7 @@
 	// make main window visible
 	[window_ makeKeyAndVisible];
 
-    [director_ runWithScene: [IntroLayer scene]];
+    [director_ replaceScene: [IntroLayer scene]];
 
 	return YES;
 }

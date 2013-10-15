@@ -9,31 +9,36 @@
 #import "DTCoreText.h"
 #import "DTAttributedTextCell.h"
 #import "DTCSSStylesheet.h"
+#import "DTLog.h"
 
 @implementation DTAttributedTextCell
 {
 	DTAttributedTextContentView *_attributedTextContextView;
 	
-	__unsafe_unretained id <DTAttributedTextContentViewDelegate> _textDelegate;
+	DT_WEAK_VARIABLE id <DTAttributedTextContentViewDelegate> _textDelegate;
 	
 	NSUInteger _htmlHash; // preserved hash to avoid relayouting for same HTML
 	
 	BOOL _hasFixedRowHeight;
+	DT_WEAK_VARIABLE UITableView *_containingTableView;
 }
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+	
     if (self)
 	{
 		// content view created lazily
     }
+	
     return self;
 }
 
 - (void)dealloc
 {
 	_textDelegate = nil;
+	_containingTableView = nil;
 }
 
 - (void)layoutSubviews
@@ -44,62 +49,132 @@
 	{
 		return;
 	}
-
+	
 	if (_hasFixedRowHeight)
 	{
 		self.attributedTextContextView.frame = self.contentView.bounds;
 	}
 	else
 	{
-		CGFloat neededContentHeight = [self requiredRowHeightInTableView:(UITableView *)self.superview];
-	
+		CGFloat neededContentHeight = [self requiredRowHeightInTableView:_containingTableView];
+		
 		// after the first call here the content view size is correct
 		CGRect frame = CGRectMake(0, 0, self.contentView.bounds.size.width, neededContentHeight);
 		self.attributedTextContextView.frame = frame;
 	}
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
+- (UITableView *)_findContainingTableView
 {
-	UITableView *tableView = (UITableView *)newSuperview;
+	UIView *tableView = self.superview;
 	
-	if (tableView.style == UITableViewStyleGrouped)
+	while (tableView)
 	{
-		// need no background because otherwise this would overlap the rounded corners
-		_attributedTextContextView.backgroundColor = [DTColor clearColor];
+		if ([tableView isKindOfClass:[UITableView class]])
+		{
+			return (UITableView *)tableView;
+		}
+		
+		tableView = tableView.superview;
 	}
 	
-	[super willMoveToSuperview:newSuperview];
+	return nil;
+}
+
+- (void)didMoveToSuperview
+{
+	[super didMoveToSuperview];
+	
+	_containingTableView = [self _findContainingTableView];
+	
+	// on < iOS 7 we need to make the background translucent to avoid artefacts at rounded edges
+	if (_containingTableView.style == UITableViewStyleGrouped)
+	{
+		if (NSFoundationVersionNumber < DTNSFoundationVersionNumber_iOS_7_0)
+		{
+			_attributedTextContextView.backgroundColor = [UIColor clearColor];
+		}
+	}
+}
+
+// http://stackoverflow.com/questions/4708085/how-to-determine-margin-of-a-grouped-uitableview-or-better-how-to-set-it/4872199#4872199
+- (CGFloat)_groupedCellMarginWithTableWidth:(CGFloat)tableViewWidth
+{
+    CGFloat marginWidth;
+    if(tableViewWidth > 20)
+    {
+        if(tableViewWidth < 400 || [UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPhone)
+        {
+            marginWidth = 10;
+        }
+        else
+        {
+            marginWidth = MAX(31.f, MIN(45.f, tableViewWidth*0.06f));
+        }
+    }
+    else
+    {
+        marginWidth = tableViewWidth - 10;
+    }
+    return marginWidth;
 }
 
 - (CGFloat)requiredRowHeightInTableView:(UITableView *)tableView
 {
 	if (_hasFixedRowHeight)
 	{
-		NSLog(@"Warning: you are calling %s even though the cell is configured with fixed row height", (const char *)__PRETTY_FUNCTION__);
+		DTLogWarning(@"You are calling %s even though the cell is configured with fixed row height", (const char *)__PRETTY_FUNCTION__);
 	}
 	
+	BOOL ios6Style = (NSFoundationVersionNumber < DTNSFoundationVersionNumber_iOS_7_0);
 	CGFloat contentWidth = tableView.frame.size.width;
 	
+	// reduce width for grouped table views
+	if (ios6Style && tableView.style == UITableViewStyleGrouped)
+	{
+		contentWidth -= [self _groupedCellMarginWithTableWidth:contentWidth] * 2;
+	}
+	
 	// reduce width for accessories
+	
 	switch (self.accessoryType)
 	{
 		case UITableViewCellAccessoryDisclosureIndicator:
+		{
+			contentWidth -= ios6Style ? 20.0f : 10.0f + 8.0f + 15.0f;
+			break;
+		}
+			
 		case UITableViewCellAccessoryCheckmark:
-			contentWidth -= 20.0f;
+		{
+			contentWidth -= ios6Style ? 20.0f : 10.0f + 14.0f + 15.0f;
 			break;
+		}
+			
 		case UITableViewCellAccessoryDetailDisclosureButton:
-			contentWidth -= 33.0f;
+		{
+			contentWidth -= ios6Style ? 33.0f : 10.0f + 42.0f + 15.0f;
 			break;
+		}
+			
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+		case UITableViewCellAccessoryDetailButton:
+		{
+			contentWidth -= 10.0f + 22.0f + 15.0f;
+			break;
+		}
+#endif
+			
 		case UITableViewCellAccessoryNone:
+		{
 			break;
-	}
-	
-	// reduce width for grouped table views
-	if (tableView.style == UITableViewStyleGrouped)
-	{
-		// left and right 10 px margins on grouped table views
-		contentWidth -= 20;
+		}
+			
+		default:
+		{
+			DTLogWarning(@"AccessoryType %d not implemented on %@", self.accessoryType, NSStringFromClass([self class]));
+			break;
+		}
 	}
 	
 	CGSize neededSize = [self.attributedTextContextView suggestedFrameSizeToFitEntireStringConstraintedToWidth:contentWidth];
@@ -109,7 +184,6 @@
 }
 
 #pragma mark Properties
-
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

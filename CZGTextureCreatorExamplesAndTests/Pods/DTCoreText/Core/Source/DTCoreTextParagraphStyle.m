@@ -9,29 +9,8 @@
 #import "DTCoreTextParagraphStyle.h"
 #import "DTTextBlock.h"
 #import "DTCSSListStyle.h"
-
-#if !TARGET_OS_IPHONE
-#import <CommonCrypto/CommonDigest.h>
-#endif
-
-// global cache for returning previously created immutable paragraph styles
-static NSCache *_CTParagraphStyleCache = nil;
-
-// a struct that takes on all sub-values, used for fast hash
-typedef struct {
-	CGFloat firstLineHeadIndent;
-	CGFloat defaultTabInterval;
-	CGFloat paragraphSpacingBefore;
-	CGFloat paragraphSpacing;
-	CGFloat headIndent;
-	CGFloat tailIndent;
-	CGFloat lineHeightMultiple;
-	CGFloat minimumLineHeight;
-	CGFloat maximumLineHeight;
-	NSInteger alignment; // make it full width, origin is uint8
-	NSInteger baseWritingDirection; // make it full width, origin is int8
-	NSUInteger tabsBlocksListsHash;
-} allvalues_t;
+#import "DTWeakSupport.h"
+#import "DTCoreTextFunctions.h"
 
 @implementation DTCoreTextParagraphStyle
 {
@@ -51,11 +30,6 @@ typedef struct {
 	NSMutableArray *_tabStops;
 }
 
-+ (void)initialize
-{
-	_CTParagraphStyleCache = [[NSCache alloc] init];
-}
-
 + (DTCoreTextParagraphStyle *)defaultParagraphStyle
 {
 	return [[DTCoreTextParagraphStyle alloc] init];
@@ -69,6 +43,8 @@ typedef struct {
 #if DTCORETEXT_SUPPORT_NS_ATTRIBUTES
 + (DTCoreTextParagraphStyle *)paragraphStyleWithNSParagraphStyle:(NSParagraphStyle *)paragraphStyle
 {
+	NSParameterAssert(paragraphStyle);
+	
 	DTCoreTextParagraphStyle *retStyle = [[DTCoreTextParagraphStyle alloc] init];
 	
 	retStyle.firstLineHeadIndent = paragraphStyle.firstLineHeadIndent;
@@ -81,37 +57,57 @@ typedef struct {
 	retStyle.minimumLineHeight = paragraphStyle.minimumLineHeight;
 	retStyle.maximumLineHeight = paragraphStyle.maximumLineHeight;
 	
-	switch(paragraphStyle.alignment)
-	{
-		case NSTextAlignmentLeft:
-			retStyle.alignment = kCTLeftTextAlignment;
-			break;
-		case NSTextAlignmentRight:
-			retStyle.alignment = kCTRightTextAlignment;
-			break;
-		case NSTextAlignmentCenter:
-			retStyle.alignment = kCTCenterTextAlignment;
-			break;
-		case NSTextAlignmentJustified:
-			retStyle.alignment = kCTJustifiedTextAlignment;
-			break;
-		case NSTextAlignmentNatural:
-			retStyle.alignment = kCTNaturalTextAlignment;
-			break;
-	}
+	retStyle.alignment = DTNSTextAlignmentToCTTextAlignment(paragraphStyle.alignment);
 	
 	switch (paragraphStyle.baseWritingDirection)
 	{
 		case NSWritingDirectionNatural:
+		{
 			retStyle.baseWritingDirection = kCTWritingDirectionNatural;
 			break;
+		}
+			
 		case NSWritingDirectionLeftToRight:
+		{
 			retStyle.baseWritingDirection = kCTWritingDirectionLeftToRight;
 			break;
+		}
 		case NSWritingDirectionRightToLeft:
+		{
 			retStyle.baseWritingDirection = kCTWritingDirectionRightToLeft;
 			break;
+		}
 	}
+	
+#if DTCORETEXT_SUPPORT_NSPARAGRAPHSTYLE_TABS
+	if (NSClassFromString(@"NSTextTab") && [NSParagraphStyle instancesRespondToSelector:@selector(tabStops)])
+	{
+		NSArray *tabStops = [paragraphStyle valueForKey:@"tabStops"];
+		
+		NSMutableArray *tmpArray = [NSMutableArray array];
+		
+		for (NSTextTab *textTab in tabStops)
+		{
+			CTTextAlignment alignment = DTNSTextAlignmentToCTTextAlignment(textTab.alignment);
+			CGFloat location = textTab.location;
+			
+			CTTextTabRef tab = CTTextTabCreate(alignment, location, NULL);
+			
+			if (tab)
+			{
+				[tmpArray addObject:(__bridge id)(tab)];
+				CFRelease(tab);
+			}
+		}
+		
+		if ([tmpArray count])
+		{
+			retStyle.tabStops = tmpArray;
+		}
+	}
+	
+	retStyle.defaultTabInterval = paragraphStyle.defaultTabInterval;
+#endif
 	
 	return retStyle;
 }
@@ -156,10 +152,10 @@ typedef struct {
 		// tab stops
 		CTParagraphStyleGetValueForSpecifier(ctParagraphStyle, kCTParagraphStyleSpecifierDefaultTabInterval, sizeof(_defaultTabInterval), &_defaultTabInterval);
 		
-		__unsafe_unretained NSArray *stops; // Could use a CFArray too, leave as a reminder how to do this in the future
+		CFArrayRef stops; // Could use a CFArray too, leave as a reminder how to do this in the future
 		if (CTParagraphStyleGetValueForSpecifier(ctParagraphStyle, kCTParagraphStyleSpecifierTabStops, sizeof(stops), &stops))
 		{
-			self.tabStops = stops;
+			self.tabStops = (__bridge NSArray *) stops;
 		}
 		
 		
@@ -171,108 +167,13 @@ typedef struct {
 
 		
 		CTParagraphStyleGetValueForSpecifier(ctParagraphStyle, kCTParagraphStyleSpecifierLineHeightMultiple, sizeof(_lineHeightMultiple), &_lineHeightMultiple);
-		
-		if (_lineHeightMultiple)
-		{
-			// paragraph space is pre-multiplied
-			if (_paragraphSpacing)
-			{
-				_paragraphSpacing /= _lineHeightMultiple;
-			}
-			
-			if (_paragraphSpacingBefore)
-			{
-				_paragraphSpacingBefore /= _lineHeightMultiple;
-			}
-		}
 	}
 	
 	return self;
 }
 
-// creates a fast hash for the properties
-- (id <NSCopying>)_cacheKey
-{
-	NSMutableString *tabsBlocksListsDescription = [NSMutableString string];
-	
-	for (id tab in _tabStops)
-	{
-		CTTextTabRef tabStop = (__bridge CTTextTabRef)tab;
-		
-		CTTextAlignment alignment = CTTextTabGetAlignment(tabStop);
-		double location = CTTextTabGetLocation(tabStop);
-		
-		[tabsBlocksListsDescription appendFormat:@"-tab:%d-%f", alignment, location];
-	}
-	
-	for (DTTextBlock *textBlock in _textBlocks)
-	{
-		[tabsBlocksListsDescription appendFormat:@"-block:%lx", (unsigned long)[textBlock hash]];
-	}
-	
-	for (DTCSSListStyle *listStyle in _textLists)
-	{
-		[tabsBlocksListsDescription appendFormat:@"-list:%lx", (unsigned long)[listStyle hash]];
-	}
-	
-#if TARGET_OS_IPHONE
-	// on iOS we use NSData's hashing function because we have less than 80 bytes (48)
-	allvalues_t *allvalues = malloc(sizeof(allvalues_t)); // will not be freed
-#else
-	// on MAC this struct is 96 bytes, so we use CommonCrypto's MD5 to reduce from > 80 bytes to less
-	allvalues_t allvalues_stack; // create tmp variable on stack 
-	allvalues_t *allvalues = &allvalues_stack; // pointer so that we can use the arrow operator
-#endif
-	
-	*allvalues = (allvalues_t){0,0,0,0,0,0,0,0,0,0,0,0};
-
-	// pack all values in the struct
-	allvalues->firstLineHeadIndent = _firstLineHeadIndent;
-	allvalues->defaultTabInterval = _defaultTabInterval;
-	allvalues->paragraphSpacingBefore = _paragraphSpacingBefore;
-	allvalues->paragraphSpacing = _paragraphSpacing;
-	allvalues->headIndent = _headIndent;
-	allvalues->tailIndent = _tailIndent;
-	allvalues->lineHeightMultiple = _lineHeightMultiple;
-	allvalues->minimumLineHeight = _minimumLineHeight;
-	allvalues->maximumLineHeight = _maximumLineHeight;
-	allvalues->baseWritingDirection = _baseWritingDirection;
-	allvalues->alignment = _alignment;
-	allvalues->tabsBlocksListsHash = [tabsBlocksListsDescription hash];
-
-#if TARGET_OS_IPHONE
-	// wrap it in NSData
-	return [NSData dataWithBytesNoCopy:allvalues length:sizeof(allvalues_t) freeWhenDone:YES];
-#else
-	//	Alternate Implementation using MD5
-	void *digest = malloc(CC_MD5_DIGEST_LENGTH); // will not be freed
-	CC_MD5(allvalues, (CC_LONG)sizeof(allvalues_t), digest);
-	
-	return [NSData dataWithBytesNoCopy:digest length:CC_MD5_DIGEST_LENGTH freeWhenDone:YES];
-#endif
-}
-
 - (CTParagraphStyleRef)createCTParagraphStyle
 {
-	id cacheKey = [self _cacheKey];
-	
-	CTParagraphStyleRef cachedParagraphStyle = CFBridgingRetain([_CTParagraphStyleCache objectForKey:cacheKey]);
-	
-	if (cachedParagraphStyle)
-	{
-		return cachedParagraphStyle; // +1 reference
-	}
-	
-	// need to multiple paragraph spacing with line height multiplier
-	float tmpParagraphSpacing = _paragraphSpacing;
-	float tmpParagraphSpacingBefore = _paragraphSpacingBefore;
-	
-	if (_lineHeightMultiple&&(_lineHeightMultiple!=1.0))
-	{
-		tmpParagraphSpacing *= _lineHeightMultiple;
-		tmpParagraphSpacingBefore *= _lineHeightMultiple;
-	}
-	
 	// This just makes it that much easier to track down memory issues with tabstops
 	CFArrayRef stops = _tabStops ? CFArrayCreateCopy (NULL, (__bridge CFArrayRef)_tabStops) : NULL;
 	
@@ -284,8 +185,8 @@ typedef struct {
 		
 		{kCTParagraphStyleSpecifierTabStops, sizeof(stops), &stops},
 		
-		{kCTParagraphStyleSpecifierParagraphSpacing, sizeof(tmpParagraphSpacing), &tmpParagraphSpacing},
-		{kCTParagraphStyleSpecifierParagraphSpacingBefore, sizeof(tmpParagraphSpacingBefore), &tmpParagraphSpacingBefore},
+		{kCTParagraphStyleSpecifierParagraphSpacing, sizeof(_paragraphSpacing), &_paragraphSpacing},
+		{kCTParagraphStyleSpecifierParagraphSpacingBefore, sizeof(_paragraphSpacingBefore), &_paragraphSpacingBefore},
 		
 		{kCTParagraphStyleSpecifierHeadIndent, sizeof(_headIndent), &_headIndent},
 		{kCTParagraphStyleSpecifierTailIndent, sizeof(_tailIndent), &_tailIndent},
@@ -297,11 +198,12 @@ typedef struct {
 	};	
 	
 	CTParagraphStyleRef ret = CTParagraphStyleCreate(settings, 12);
-	if (stops) CFRelease(stops);
-
-	// cache it for next time
-	[_CTParagraphStyleCache setObject:(__bridge id)ret forKey:cacheKey];
 	
+	if (stops)
+	{
+		CFRelease(stops);
+	}
+
 	return ret;
 }
 
@@ -312,8 +214,6 @@ typedef struct {
 
 	[mps setFirstLineHeadIndent:_firstLineHeadIndent];
 
-	// _defaultTabInterval not supported
-
 	[mps setParagraphSpacing:_paragraphSpacing];
 	[mps setParagraphSpacingBefore:_paragraphSpacingBefore];
 	
@@ -323,38 +223,7 @@ typedef struct {
 	[mps setMinimumLineHeight:_minimumLineHeight];
 	[mps setMaximumLineHeight:_maximumLineHeight];
 	
-	switch(_alignment)
-	{
-		case kCTLeftTextAlignment:
-		{
-			[mps setAlignment:NSTextAlignmentLeft];
-			break;
-		}
-			
-		case kCTRightTextAlignment:
-		{
-			[mps setAlignment:NSTextAlignmentRight];
-			break;
-		}
-			
-		case kCTCenterTextAlignment:
-		{
-			[mps setAlignment:NSTextAlignmentCenter];
-			break;
-		}
-			
-		case kCTJustifiedTextAlignment:
-		{
-			[mps setAlignment:NSTextAlignmentJustified];
-			break;
-		}
-			
-		case kCTNaturalTextAlignment:
-		{
-			[mps setAlignment:NSTextAlignmentNatural];
-			break;
-		}
-	}
+	[mps setAlignment:DTNSTextAlignmentFromCTTextAlignment(_alignment)];
 	
 	switch (_baseWritingDirection)
 	{
@@ -376,8 +245,39 @@ typedef struct {
 			break;
 		}
 	}
-
-	// _tap stops not supported
+	
+#if DTCORETEXT_SUPPORT_NSPARAGRAPHSTYLE_TABS
+	if (NSClassFromString(@"NSTextTab") && [NSParagraphStyle instancesRespondToSelector:@selector(tabStops)])
+	{
+		NSMutableArray *tabs = [NSMutableArray array];
+		
+		for (id object in _tabStops)
+		{
+			CTTextTabRef tab = (__bridge CTTextTabRef)(object);
+			
+			CTTextAlignment alignment = CTTextTabGetAlignment(tab);
+			NSTextAlignment nsAlignment = DTNSTextAlignmentFromCTTextAlignment(alignment);
+			CGFloat location = (CGFloat)CTTextTabGetLocation(tab);
+			
+			NSTextTab *textTab = [[NSTextTab alloc] initWithTextAlignment:nsAlignment location:location options:[NSDictionary dictionary]];
+			
+			if (!textTab)
+			{
+				break;
+			}
+			
+			[tabs addObject:textTab];
+		}
+		
+		if ([tabs count])
+		{
+			[mps setValue:tabs forKey:@"tabStops"];
+		}
+		
+		mps.defaultTabInterval = _defaultTabInterval;
+	}
+#endif
+	
 	return (NSParagraphStyle *)mps;
 }
 #endif
@@ -502,6 +402,101 @@ typedef struct {
 	newObject.textBlocks = self.textBlocks; //copy
 	
 	return newObject;
+}
+
+#pragma mark - Comparing
+
+- (BOOL)isEqual:(id)object
+{
+	if (object == self)
+	{
+		return YES;
+	}
+	
+	if (!object)
+	{
+		return NO;
+	}
+	
+	if (![object isKindOfClass:[DTCoreTextParagraphStyle class]])
+	{
+		return NO;
+	}
+	
+	DTCoreTextParagraphStyle *otherStyle = object;
+	
+	
+	if (_firstLineHeadIndent != otherStyle->_firstLineHeadIndent)
+	{
+		return NO;
+	}
+	
+	if (_headIndent != otherStyle->_headIndent)
+	{
+		return NO;
+	}
+
+	if (_tailIndent != otherStyle->_tailIndent)
+	{
+		return NO;
+	}
+	
+	if (_defaultTabInterval != otherStyle->_defaultTabInterval)
+	{
+		return NO;
+	}
+	
+	if (_paragraphSpacing != otherStyle->_paragraphSpacing)
+	{
+		return NO;
+	}
+	
+	if (_paragraphSpacingBefore != otherStyle->_paragraphSpacingBefore)
+	{
+		return NO;
+	}
+
+	if (_lineHeightMultiple != otherStyle->_lineHeightMultiple)
+	{
+		return NO;
+	}
+	
+	if (_minimumLineHeight != otherStyle->_minimumLineHeight)
+	{
+		return NO;
+	}
+	
+	if (_maximumLineHeight != otherStyle->_maximumLineHeight)
+	{
+		return NO;
+	}
+	
+	if (_alignment != otherStyle->_alignment)
+	{
+		return NO;
+	}
+	
+	if (_baseWritingDirection != otherStyle->_baseWritingDirection)
+	{
+		return NO;
+	}
+	
+	if (_textLists && ![_textLists isEqualToArray:otherStyle->_textLists])
+	{
+		return NO;
+	}
+
+	if (_textBlocks && ![_textBlocks isEqualToArray:otherStyle->_textBlocks])
+	{
+		return NO;
+	}
+	
+	if (_tabStops && ![_tabStops isEqualToArray:otherStyle->_tabStops])
+	{
+		return NO;
+	}
+	
+	return YES;
 }
 
 #pragma mark Properties

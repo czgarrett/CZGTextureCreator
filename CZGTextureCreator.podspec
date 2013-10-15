@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'CZGTextureCreator'
-  s.version      = '0.9.0'
+  s.version      = '0.9.1'
   s.license      = 'MIT'
   s.summary      = 'A cocos2d class for drawing textures with Core Graphics and Core Text.'
   s.homepage     = 'https://github.com/czgarrett/CZGTextureCreator'

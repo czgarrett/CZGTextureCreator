@@ -8,14 +8,15 @@
 #import "DTCoreTextConstants.h"
 #import "DTCompatibility.h"
 
-#import "DTColor+HTML.h"
+#import "DTColor+Compatibility.h"
 #import "DTImage+HTML.h"
 
 // common utilities
-#import "DTUtils.h"
 #if TARGET_OS_IPHONE
 #import "DTCoreTextFunctions.h"
 #endif
+
+#import "DTColorFunctions.h"
 
 // common classes
 #import "DTCSSListStyle.h"
@@ -25,6 +26,7 @@
 #import "DTCoreTextParagraphStyle.h"
 #import "DTHTMLAttributedStringBuilder.h"
 #import "DTHTMLElement.h"
+#import "DTHTMLWriter.h"
 #import "NSCharacterSet+HTML.h"
 #import "NSDictionary+DTCoreText.h"
 #import "NSAttributedString+HTML.h"
@@ -64,6 +66,7 @@
 #import "DTCoreTextFontCollection.h"
 #import "DTCoreTextGlyphRun.h"
 #import "DTCoreTextLayoutFrame.h"
+#import "DTCoreTextLayoutFrame+Cursor.h"
 #import "DTCoreTextLayoutLine.h"
 #import "DTCoreTextLayouter.h"
 
@@ -73,5 +76,3 @@
 
 #endif
 
-
-#define DT_ADD_FONT_ON_ATTACHMENTS

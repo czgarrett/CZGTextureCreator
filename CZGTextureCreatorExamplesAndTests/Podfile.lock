@@ -1,27 +1,27 @@
 PODS:
-  - cocos2d (2.0):
+  - cocos2d (2.1):
     - cocos2d/CocosDenshion
-  - cocos2d/CocosDenshion (2.0)
-  - DTCoreText (1.5.2):
-    - DTFoundation/Core (~> 1.2.0)
-    - DTFoundation/DTHMLParser (~> 1.2.0)
-    - DTFoundation/UIKit (~> 1.2.0)
-  - DTFoundation/Core (1.2.0)
-  - DTFoundation/DTHMLParser (1.2.0):
+  - cocos2d/CocosDenshion (2.1)
+  - DTCoreText (1.6.8):
+    - DTFoundation/Core (~> 1.5.4)
+    - DTFoundation/DTHTMLParser (~> 1.5.4)
+    - DTFoundation/UIKit (~> 1.5.4)
+  - DTFoundation/Core (1.5.4)
+  - DTFoundation/DTHTMLParser (1.5.4):
     - DTFoundation/Core
-  - DTFoundation/UIKit (1.2.0):
+  - DTFoundation/UIKit (1.5.4):
     - DTFoundation/Core
   - Kiwi (1.1.1)
 
 DEPENDENCIES:
-  - cocos2d (~> 2.0.0)
-  - DTCoreText (~> 1.5.2)
+  - cocos2d (~> 2.1)
+  - DTCoreText (~> 1.6)
   - Kiwi
 
 SPEC CHECKSUMS:
-  cocos2d: aaaf990e823918463195f3e894c0ddc81c2689e7
-  DTCoreText: 9798df6b23bf9348917f1faba7b8a08433b4ee46
-  DTFoundation: e73ab1f43b86b37664a3f0148430d58da1eab713
+  cocos2d: 173f234c5236b90c674d087cb7b2a7babf243b13
+  DTCoreText: 24f96ab529f19114533ca71922469c94fb73db4d
+  DTFoundation: 86e59f373c7a9b9f859f8a9c1debf072979eebec
   Kiwi: ab0fa8d13b97dca05915e31df9b2d888d74ab717
 
-COCOAPODS: 0.20.2
+COCOAPODS: 0.26.2

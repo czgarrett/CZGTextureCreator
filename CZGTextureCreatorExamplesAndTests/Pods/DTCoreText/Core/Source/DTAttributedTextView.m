@@ -6,10 +6,13 @@
 //  Copyright 2011 Drobnik.com. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "DTAttributedTextView.h"
 #import "DTCoreText.h"
-#import <QuartzCore/QuartzCore.h>
 #import "DTTiledLayerWithoutFade.h"
+#import "DTBlockFunctions.h"
+
 
 @interface DTAttributedTextView ()
 
@@ -24,7 +27,7 @@
 	UIView *_backgroundView;
 
 	// these are pass-through, i.e. store until the content view is created
-	__unsafe_unretained id textDelegate;
+	DT_WEAK_VARIABLE id textDelegate;
 	NSAttributedString *_attributedString;
 	
 	BOOL _shouldDrawLinks;
@@ -104,7 +107,7 @@
 {
 	NSRange range = [self.attributedTextContentView.attributedString rangeOfAnchorNamed:anchorName];
 	
-	if (range.length != NSNotFound)
+	if (range.location != NSNotFound)
 	{
 		[self scrollRangeToVisible:range animated:animated];
 	}
@@ -125,42 +128,56 @@
 
 - (void)relayoutText
 {
-	if (![NSThread isMainThread])
-	{
-		[self performSelectorOnMainThread:@selector(relayoutText) withObject:nil waitUntilDone:YES];
-		return;
-	}
+	DTBlockPerformSyncIfOnMainThreadElseAsync(^{
+		
+		// need to reset the layouter because otherwise we get the old framesetter or cached layout frames
+		_attributedTextContentView.layouter=nil;
+		
+		// here we're layouting the entire string, might be more efficient to only relayout the paragraphs that contain these attachments
+		[_attributedTextContentView relayoutText];
+		
+		// layout custom subviews for visible area
+		[self setNeedsLayout];
+	});
+}
+
+#pragma mark - Working with a Cursor
+
+- (NSInteger)closestCursorIndexToPoint:(CGPoint)point
+{
+	// the point is in the coordinate system of the receiver, need to convert into those of the content view first
+	CGPoint pointInContentView = [self.attributedTextContentView convertPoint:point fromView:self];
 	
-	// need to reset the layouter because otherwise we get the old framesetter or cached layout frames
-	_attributedTextContentView.layouter=nil;
+	return [self.attributedTextContentView closestCursorIndexToPoint:pointInContentView];
+}
+
+- (CGRect)cursorRectAtIndex:(NSInteger)index
+{
+	CGRect rectInContentView = [self.attributedTextContentView cursorRectAtIndex:index];
 	
-	// here we're layouting the entire string, might be more efficient to only relayout the paragraphs that contain these attachments
-	[_attributedTextContentView relayoutText];
+	// the point is in the coordinate system of the content view, need to convert into those of the receiver first
+	CGRect rect = [self.attributedTextContentView convertRect:rectInContentView toView:self];
 	
-	// layout custom subviews for visible area
-	[self setNeedsLayout];
+	return rect;
 }
 
 #pragma mark Notifications
 - (void)contentViewDidLayout:(NSNotification *)notification
 {
-	if (![NSThread mainThread])
-	{
-		[self performSelectorOnMainThread:@selector(contentViewDidLayout:) withObject:notification waitUntilDone:YES];
-		return;
-	}
-	
-	NSDictionary *userInfo = [notification userInfo];
-	CGRect optimalFrame = [[userInfo objectForKey:@"OptimalFrame"] CGRectValue];
-	
-	CGRect frame = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
-	
-	// ignore possibly delayed layout notification for a different width
-	if (optimalFrame.size.width == frame.size.width)
-	{
-		_attributedTextContentView.frame = optimalFrame;
-		self.contentSize = [_attributedTextContentView intrinsicContentSize];
-	}
+	DTBlockPerformSyncIfOnMainThreadElseAsync(^{
+		
+		NSDictionary *userInfo = [notification userInfo];
+		CGRect optimalFrame = [[userInfo objectForKey:@"OptimalFrame"] CGRectValue];
+		
+		CGRect frame = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+		
+		// ignore possibly delayed layout notification for a different width
+		if (optimalFrame.size.width == frame.size.width)
+		{
+			_attributedTextContentView.frame = optimalFrame;
+			self.contentSize = [_attributedTextContentView intrinsicContentSize];
+		}
+	});
 }
 
 #pragma mark Properties

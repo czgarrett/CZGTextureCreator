@@ -9,16 +9,16 @@
 #import "DTCoreText.h"
 #import "NSScanner+HTML.h"
 #import "NSCharacterSet+HTML.h"
+#import "DTColorFunctions.h"
 
 @implementation NSScanner (HTML)
 
 #pragma mark CSS
 
 // scan a single element from a style list
-- (BOOL)scanCSSAttribute:(NSString **)name value:(NSString **)value
+- (BOOL)scanCSSAttribute:(NSString **)name value:(id *)value
 {
 	NSString *attrName = nil;
-	NSMutableString *attrValue = [NSMutableString string];
 	
 	NSInteger initialScanLocation = [self scanLocation];
 	
@@ -27,6 +27,11 @@
 	NSMutableCharacterSet *nonWhiteCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
 	[nonWhiteCharacterSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@";"]];
 	[nonWhiteCharacterSet invert];
+
+	NSMutableCharacterSet *nonWhiteCommaCharacterSet = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+	[nonWhiteCommaCharacterSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@";,"]];
+	[nonWhiteCommaCharacterSet invert];
+
 	
 	// alphanumeric plus -
 	NSCharacterSet *cssStyleAttributeNameCharacterSet = [NSCharacterSet cssStyleAttributeNameCharacterSet];
@@ -40,7 +45,7 @@
 	[self scanCharactersFromSet:whiteCharacterSet intoString:NULL];
 	
 	// expect :
-	if (![self scanString:@":" intoString:NULL])
+	if (![self  scanString:@":" intoString:NULL])
 	{
 		[self setScanLocation:initialScanLocation];
 		return NO;
@@ -49,62 +54,91 @@
 	// skip whitespace
 	[self scanCharactersFromSet:whiteCharacterSet intoString:NULL];
 	
-	NSString *quote = nil;
-	if ([self scanCharactersFromSet:[NSCharacterSet quoteCharacterSet] intoString:&quote])
+	NSMutableArray *results = [NSMutableArray array];
+	BOOL nextIterationAddsNewEntry = YES;
+	
+	while (![self isAtEnd] && ![self scanString:@";" intoString:NULL])
 	{
-		// attribute is quoted
-		
-		if (![self scanUpToString:quote intoString:&attrValue])
-		{
-			[self setScanLocation:initialScanLocation];
-			return NO;
-		}
-		
-		// skip ending quote
-		[self scanString:quote intoString:NULL];
-		
 		// skip whitespace
 		[self scanCharactersFromSet:whiteCharacterSet intoString:NULL];
-		
-		//TODO: decode unicode sequences like "\2022"
-		
-		// skip ending characters
-		[self scanString:@";" intoString:NULL];
-	}
-	else
-	{
-		// attribute is not quoted, we append elements until we find a ; or the string is at the end
-		while (![self isAtEnd])
+
+		NSString *quote = nil;
+		if ([self scanCharactersFromSet:[NSCharacterSet quoteCharacterSet] intoString:&quote])
 		{
+			NSString *quotedValue = nil;
+			
+			// attribute is quoted
+			if (![self scanUpToString:quote intoString:&quotedValue])
+			{
+				[self setScanLocation:initialScanLocation];
+				return NO;
+			}
+			else
+			{
+				if (nextIterationAddsNewEntry)
+				{
+					[results addObject:quotedValue];
+					nextIterationAddsNewEntry = NO;
+				}
+				else
+				{
+					quotedValue = [NSString stringWithFormat:@"%@ %@%@%@", [results lastObject], quote, quotedValue, quote];
+					[results removeLastObject];
+					[results addObject:quotedValue];
+				}
+			}
+			
+			// skip ending quote
+			[self scanString:quote intoString:NULL];
+			
+			//TODO: decode unicode sequences like "\2022"
+		}
+		else
+		{
+			// attribute is not quoted, we append elements until we find a ; or the string is at the end
 			NSString *value = nil;
-			if (![self scanCharactersFromSet:nonWhiteCharacterSet intoString:&value])
+			
+			if ([self scanString:@"," intoString:&value])
 			{
-				// skip ending characters
-				[self scanString:@";" intoString:NULL];
+                BOOL isStringOnlyCSSProperty = NO;
+                
+				if (![value isEqualToString:@","])
+				{
+					[results addObject:value];
+				}
+				else if ([attrName isEqualToString:@"font"] || ([attrName rangeOfString:@"color"].location != NSNotFound) || ([attrName rangeOfString:@"shadow"].location != NSNotFound))
+				{
+					value = [NSString stringWithFormat:@"%@%@", [results lastObject], value];
+					[results removeLastObject];
+					[results addObject:value];
+                    
+                    isStringOnlyCSSProperty = YES;
+				}
 				
-				break;
+				if ([value isEqualToString:@","] && !isStringOnlyCSSProperty)
+				{
+					nextIterationAddsNewEntry = YES;
+				}
 			}
-			
-			// interleave a space if there are multiple parts
-			if ([attrValue length])
+			else if ([self scanCharactersFromSet:nonWhiteCommaCharacterSet intoString:&value])
 			{
-				[attrValue appendString:@" "];
-			}
-			
-			[attrValue appendString:value];
-			
-			// skip whitespace
-			[self scanCharactersFromSet:whiteCharacterSet intoString:NULL];
-			
-			if ([self scanString:@";" intoString:NULL])
-			{
-				// reached end of attribute
-				break;
+				if ([value length] && ![value isEqualToString:@","])
+				{
+					if (nextIterationAddsNewEntry) {
+						[results addObject:value];
+						nextIterationAddsNewEntry = NO;
+					} else {
+						value = [NSString stringWithFormat:@"%@ %@", [results lastObject], value];
+						[results removeLastObject];
+						[results addObject:value];
+					}
+				}
 			}
 		}
+
+		// skip whitespace
+		[self scanCharactersFromSet:whiteCharacterSet intoString:NULL];
 	}
-	
-	
 	
 	// Success 
 	if (name)
@@ -114,7 +148,13 @@
 	
 	if (value)
 	{
-		*value = attrValue;
+		if (results.count == 0) {
+			*value = @"";
+		} else if (results.count == 1) {
+			*value = results[0];
+		} else {
+			*value = results;
+		}
 	}
 	
 	return YES;
@@ -214,7 +254,7 @@
 	
 	if (colorName)
 	{
-		foundColor = [DTColor colorWithHTMLName:colorName];
+		foundColor = DTColorCreateWithHTMLName(colorName);
 	}
 	
 	if (!foundColor)

@@ -21,6 +21,18 @@ Follow [@cocoanetics](http://twitter.com/cocoanetics) on Twitter or subscribe to
 
 #### Changelog
 
+- [Version 1.6.8](http://www.cocoanetics.com/2013/10/dtcoretext-1-6-8/)
+- [Version 1.6.7](http://www.cocoanetics.com/2013/09/dtcoretext-1-6-7/)
+- [Version 1.6.6](http://www.cocoanetics.com/2013/08/dtcoretext-1-6-6/)
+- [Version 1.6.5](http://www.cocoanetics.com/2013/08/dtcoretext-1-6-5/)
+- [Version 1.6.4](http://www.cocoanetics.com/2013/08/dtcoretext-1-6-4/)
+- [Version 1.6.3](http://www.cocoanetics.com/2013/08/dtcoretext-1-6-3-dtrichtexteditor-1-6-2/)
+- [Version 1.6.2](http://www.cocoanetics.com/2013/08/dtcoretext-1-6-2/)
+- [Version 1.6.1](http://www.cocoanetics.com/2013/07/dtcoretext-1-6-1/)
+- [Version 1.6.0](http://www.cocoanetics.com/2013/07/dtcoretext-1-6/)
+- [Version 1.5.3](http://www.cocoanetics.com/2013/06/dtcoretext-1-5-3/)
+- [Version 1.5.2](http://www.cocoanetics.com/2013/05/dtcoretext-1-5-2/)
+- [Version 1.5](http://www.cocoanetics.com/2013/05/rich-text-update-1-5/)
 - [Version 1.4.x](http://www.cocoanetics.com/2013/04/dtcoretext-1-4-2/)
 - [Version 1.4](http://www.cocoanetics.com/2013/04/rich-text-update-1-4/)
 - [Version 1.2](http://www.cocoanetics.com/2013/01/dtcoretext-1-2-0/)
