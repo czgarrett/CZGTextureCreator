@@ -31,6 +31,11 @@
     return self;
 }
 
+- (NSUInteger) frameCount {
+    return [_drawingBlocks count];
+}
+
+
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size drawingBlock: (CZGDrawBlock) drawingBlock {
     [self.rectanglePacker addRectangleWithSize: size key: name];
     self.drawingBlocks[name] = [drawingBlock copy];
@@ -66,7 +71,8 @@
                   DTCoreTextLayoutFrame *layoutFrame;
                   layoutFrame = [layouter layoutFrameWithRect: UIEdgeInsetsInsetRect(rect, blockInsets)
                                                         range: NSMakeRange(0, 0)];
-                  [layoutFrame drawInContext: ctx options: DTCoreTextLayoutFrameDrawingOmitLinks | DTCoreTextLayoutFrameDrawingOmitAttachments];
+                  [layoutFrame drawInContext: ctx
+                                     options: DTCoreTextLayoutFrameDrawingOmitLinks | DTCoreTextLayoutFrameDrawingOmitAttachments];
               }];
     
 }

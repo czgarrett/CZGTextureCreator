@@ -27,6 +27,7 @@ typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html;
 
 - (CCTexture2D *) createTexture;
+- (NSUInteger) frameCount;
 
 // Removes all of the sprite frames from the cache.  This will allow the texture to be released.
 - (void) clearFramesFromCache;

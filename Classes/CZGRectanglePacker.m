@@ -159,7 +159,6 @@
         // fits exactly
         if (child.rect.size.width == _rect.size.width && child.rect.size.height == _rect.size.height) {
             child.rect = _rect;
-            //NSLog(@"Added child with rect: %@", NSStringFromCGRect(self.rect));
             _occupied = YES;
             return YES;
         }
