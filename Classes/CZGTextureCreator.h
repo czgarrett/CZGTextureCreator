@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "cocos2d.h"
+#import <SpriteKit/SpriteKit.h>
 
 typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
 
@@ -17,7 +17,7 @@ typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
 // Example:
 /*
  textureCreator.defaultTextOptions =  @{  DTDefaultFontFamily : @"Futura",
-                                          DTDefaultTextColor  : @"white"};
+ DTDefaultTextColor  : @"white"};
  */
 @property (nonatomic, strong) NSDictionary *defaultTextOptions;
 @property (nonatomic, assign) UIEdgeInsets frameInsets;
@@ -26,11 +26,12 @@ typedef void(^CZGDrawBlock)(CGRect rect, CGContextRef ctx);
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html backgroundBlock: (CZGDrawBlock) drawingBlock;
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html;
 
-- (CCTexture2D *) createTexture;
+- (void) createTexture;
+- (SKTexture *) textureNamed: (NSString *) name;
 - (NSUInteger) frameCount;
 
 // Removes all of the sprite frames from the cache.  This will allow the texture to be released.
-- (void) clearFramesFromCache;
-
+//- (void) clearFramesFromCache;
+-(SKTexture*)mainTexture;
 
 @end

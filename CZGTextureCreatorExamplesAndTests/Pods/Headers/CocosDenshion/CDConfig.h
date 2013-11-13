@@ -1,1 +1,0 @@
-../../cocos2d/CocosDenshion/CDConfig.h

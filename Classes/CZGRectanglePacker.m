@@ -7,7 +7,6 @@
 //
 
 #import "CZGRectanglePacker.h"
-#import "cocos2d.h"
 
 @interface CZGRectanglePacker() {
     
@@ -32,8 +31,9 @@
         self.startingWidth = 1;
         self.totalArea = 0.0;
         self.packedRects = [NSMutableDictionary dictionary];
-        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxDimension);
-        _maxDimension = _maxDimension / [UIScreen mainScreen].scale;
+//        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &_maxDimension);
+//        _maxDimension = _maxDimension / [UIScreen mainScreen].scale;
+        _maxDimension = 2048;
     }
     return self;
 }
@@ -200,6 +200,10 @@
         }
         
     }
+}
+
+- (NSString *) description {
+    return [NSString stringWithFormat: @"Packed Rect: %@", NSStringFromCGRect([self rect])];
 }
 
 

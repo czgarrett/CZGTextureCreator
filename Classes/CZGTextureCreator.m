@@ -11,7 +11,8 @@
 #import "DTCoreText.h"
 
 @interface CZGTextureCreator() {
-    
+    SKTexture *_mainTexture;
+    NSMutableDictionary *_textureRects;
 }
 
 @property (nonatomic, strong) CZGRectanglePacker *rectanglePacker;
@@ -27,6 +28,7 @@
         self.drawingBlocks = [NSMutableDictionary dictionary];
         self.rectanglePacker = [[CZGRectanglePacker alloc] init];
         self.defaultTextOptions = @{};
+        _textureRects = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -51,8 +53,9 @@
 - (void) addFrameWithName: (NSString *) name size: (CGSize) size htmlText: (NSString *) html backgroundBlock:(CZGDrawBlock) backgroundBlock {
     NSData *data = [html dataUsingEncoding:NSUTF8StringEncoding];
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithHTMLData:data
-                                                                      options: self.defaultTextOptions
-                                                           documentAttributes: nil];
+                                                                                    options: self.defaultTextOptions
+                                                                         documentAttributes: nil];
+    //    NSAttributedString *l
     DTCoreTextLayouter *layouter = [[DTCoreTextLayouter alloc] initWithAttributedString: string];
     DTCoreTextLayoutFrame *frame = [layouter layoutFrameWithRect: CGRectMake(0,0,size.width, size.height) range: NSMakeRange(0, 0)];
     //CGSize neededSize = [layouter suggestedFrameSizeToFitEntireStringConstraintedToWidth: size.width];
@@ -77,37 +80,42 @@
     
 }
 
-
-- (CCTexture2D *) createTexture {
-    
-    CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
-    CCTexture2D *texture = [[CCTexture2D alloc] initWithCGImage: [self createImage].CGImage
-                                                 resolutionType: kCCResolutioniPhone];
-    for (NSString *key in [self.drawingBlocks allKeys]) {
-        CCSpriteFrame *frame = [CCSpriteFrame frameWithTexture: texture
-                                                          rect: [self.rectanglePacker rectForKey: key]];
-        [frameCache addSpriteFrame: frame name: key];
-    }
-    return texture;
+-(SKTexture*) mainTexture {
+    return _mainTexture;
 }
 
-- (void) clearFramesFromCache {
-    CCSpriteFrameCache *frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+- (void) createTexture {
+    UIImage *createdImage = [self createImage];
+    _mainTexture = [SKTexture textureWithImage:createdImage];
+    //    NSLog(@"%f", createdImage.scale);
     for (NSString *key in [self.drawingBlocks allKeys]) {
-        [frameCache removeSpriteFrameByName: key];
+        CGRect rect = [self.rectanglePacker rectForKey:key];
+        float textureWidth = _mainTexture.size.width;
+        float textureHeight = _mainTexture.size.height;
+        float scale = [UIScreen mainScreen].scale;
+        
+        CGRect newRect = CGRectMake(scale*rect.origin.x/textureWidth,   1-scale*(rect.origin.y+rect.size.height)/textureHeight,
+                                    scale*rect.size.width/textureWidth, scale*rect.size.height/textureHeight);
+        _textureRects[key] = NSStringFromCGRect(newRect);
     }
+}
+
+- (SKTexture *) textureNamed: (NSString *) name {
+    return [SKTexture textureWithRect:CGRectFromString(_textureRects[name]) inTexture: _mainTexture];
 }
 
 - (UIImage *) createImage {
     CGFloat scale = [UIScreen mainScreen].scale;
     [self.rectanglePacker pack];
     CGSize size = [self.rectanglePacker packedSize];
-    size.width *= scale;
-    size.height *= scale;
-    UIGraphicsBeginImageContext(size);
+    //    size.width *= scale;
+    //    size.height *= scale;
+    UIGraphicsBeginImageContextWithOptions(size, NO, scale);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextScaleCTM(ctx, scale, scale);
+    //    CGContextScaleCTM(ctx, scale, scale);
     for (NSString *key in [self.drawingBlocks allKeys]) {
+        
         CZGDrawBlock draw = self.drawingBlocks[key];
         CGContextSaveGState(ctx);
         draw([self.rectanglePacker rectForKey: key], ctx);

@@ -1,0 +1,5 @@
+platform :ios, '7.0'
+
+podspec :path => "../CZGTextureCreator.podspec"
+
+pod 'DTCoreText', '~> 1.6'
